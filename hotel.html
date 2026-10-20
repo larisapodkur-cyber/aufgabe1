@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Im Hotel</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}.wrap{padding-bottom:80px!important}</style>
+</head>
+<body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: two parts (Wörter / Gespräche) as stacked sheets; article colours m blue, n green, f red as in the textbook */
+:root{
+  --bg:#eef3e8; --sheet:#ffffff; --ink:#1f2a17; --muted:#5d6a52; --line:#d9e3cf;
+  --accent:#5a9a1b; --accent-ink:#ffffff; --chip:#e6f0da;
+  --m:#2f73d9; --n:#2f9e5a; --f:#d9483b; --gast:#c4571d; --rez:#2f73d9;
+  --ok:#1f9d55; --ok-bg:#dcf4e5; --bad:#cf4040; --bad-bg:#fbe2e2;
+  --display:"Rubik",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif; --shadow:0 2px 0 #d3dec6;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121a0e; --sheet:#1a2414; --ink:#e9f2e1; --muted:#a3b494; --line:#2c3a23;
+  --accent:#9bd35a; --accent-ink:#13200a; --chip:#25331c;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73; --gast:#ff9a5c; --rez:#6aa3ff;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #090d06; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121a0e; --sheet:#1a2414; --ink:#e9f2e1; --muted:#a3b494; --line:#2c3a23;
+  --accent:#9bd35a; --accent-ink:#13200a; --chip:#25331c;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73; --gast:#ff9a5c; --rez:#6aa3ff;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #090d06; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(30px,7vw,44px);font-weight:800;line-height:1.1}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+p{margin:0}
+.partTitle{font:800 13px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.sheet{background:var(--sheet);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;gap:12px;min-width:0}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.num{font:800 16px var(--display);background:var(--accent);color:var(--accent-ink);min-width:38px;height:38px;border-radius:19px;padding:0 8px;display:grid;place-items:center;flex:none}
+h2{font-size:21px;font-weight:700;flex:1;min-width:180px}
+.part{font:700 15px var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:15px}
+details summary{cursor:pointer;font:700 18px var(--display);color:var(--accent)}
+/* glossary */
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px;margin-top:12px}
+@media (max-width:540px){.gl{grid-template-columns:1fr}}
+.gl div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}
+.gl b{font-family:var(--display);font-weight:700}
+.gl span{color:var(--muted);text-align:right}
+.art-der{color:var(--m)}.art-das{color:var(--n)}.art-die{color:var(--f)}
+.phr{display:grid;gap:14px;margin-top:12px}
+.phr h3{font-size:16px}
+.phr ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.phr li{display:flex;gap:8px;align-items:flex-start}
+.phr li div{min-width:0}
+.phr small{display:block;color:var(--muted)}
+.say{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--chip);color:var(--accent);cursor:pointer;font-size:13px}
+/* items */
+.item{display:grid;gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.item:first-child{border-top:0}
+.sent{font-size:18px;font-weight:600;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ctx{font-size:15px;color:var(--muted)}
+.ua{font-weight:800;color:var(--accent)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:700 16px var(--body);border:2px solid var(--accent);background:transparent;color:var(--ink);border-radius:12px;padding:6px 14px;cursor:pointer;min-height:44px;text-align:left}
+.opt.w{font:700 17px var(--display)}
+.opt:hover:not(:disabled){background:var(--chip)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.opt.der{border-color:var(--m);color:var(--m)}.opt.das{border-color:var(--n);color:var(--n)}.opt.die{border-color:var(--f);color:var(--f)}
+.gap{display:inline-block;min-width:80px;border-bottom:3px solid var(--accent);text-align:center;font:700 18px var(--display);color:var(--accent);padding:0 6px}
+.item.ok .gap{color:var(--ok);border-color:var(--ok)} .item.bad .gap{color:var(--bad);border-color:var(--bad)}
+.fb{font-size:15px;font-weight:700;min-height:1.2em}
+.item.ok .fb,.fb.ok{color:var(--ok)} .item.bad .fb,.fb.bad{color:var(--bad)}
+.opt:focus-visible,.btn:focus-visible,.say:focus-visible,select:focus-visible{outline:3px solid var(--gast);outline-offset:2px}
+.btn{font:700 16px var(--display);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.who{font:800 12px var(--display);letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 6px;flex:none}
+.who.G{background:var(--gast);color:var(--sheet)}.who.R{background:var(--rez);color:var(--sheet)}
+.opt.G{border-color:var(--gast)}.opt.R{border-color:var(--rez)}
+/* ordering */
+.order{display:grid;gap:8px}
+.chain,.pool{display:flex;flex-direction:column;gap:8px;counter-reset:s}
+.line{display:flex;gap:8px;align-items:center;text-align:left}
+.chain .line::before{counter-increment:s;content:counter(s) ".";font:800 16px var(--display);color:var(--accent);flex:none}
+.chain:empty::after{content:"Натискай репліки внизу по черзі, і діалог з'являтиметься тут";color:var(--muted);font-size:15px;border:2px dashed var(--line);border-radius:12px;padding:12px}
+/* dialogue gaps */
+.dlg{display:grid;gap:10px}
+.dl{display:flex;gap:8px;align-items:flex-start;font-size:18px;font-weight:600}
+.dl div{min-width:0;line-height:2}
+select{font:700 16px var(--display);border:2px solid var(--accent);border-radius:10px;padding:4px 6px;background:var(--sheet);color:var(--ink);max-width:100%}
+select.ok{border-color:var(--ok);background:var(--ok-bg)} select.bad{border-color:var(--bad);background:var(--bad-bg)}
+/* score */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--sheet);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.score{font:800 17px var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.final{text-align:center;justify-items:center}
+.big{font:800 44px var(--display);color:var(--accent);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Im Hotel: Wir haben hier ein Problem</h1>
+    <p class="lead">Menschen A1.2, Lektion 16. Частина A: що є в готелі. Частина B: як попросити про допомогу, як відповісти та як реагувати на вибачення.</p>
+  </header>
+
+  <div class="bar" role="status" aria-live="polite">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">0 / 0</div>
+  </div>
+
+  <section class="sheet">
+    <details><summary>Словничок «Im Hotel»</summary><div class="gl" id="gloss"></div></details>
+    <details><summary>Фрази для розмови (можна послухати)</summary><div class="phr" id="phr"></div></details>
+  </section>
+
+  <div class="partTitle">Teil A · Was gibt es im Hotel?</div>
+
+  <section class="sheet">
+    <div class="head"><div class="num">A1</div><h2>Wie heißt das auf Deutsch?</h2><span class="part" id="pA1"></span></div>
+    <div id="A1"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">A2</div><h2>der, das oder die?</h2><span class="part" id="pA2"></span></div>
+    <p class="hint">Обери артикль. Кольори такі самі, як у підручнику: der синій, das зелений, die червоний.</p>
+    <div id="A2"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">A3</div><h2>Was ist das Problem?</h2><span class="part" id="pA3"></span></div>
+    <p class="hint">Що зламалося або чого бракує? Обери слово.</p>
+    <div id="A3"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">A4</div><h2>Es gibt kein / keine / keinen …</h2><span class="part" id="pA4"></span></div>
+    <p class="hint">Після «es gibt» іде Akkusativ: der → keinen, das → kein, die → keine.</p>
+    <div id="A4"></div>
+  </section>
+
+  <div class="partTitle">Teil B · Gespräche im Hotel</div>
+
+  <section class="sheet">
+    <div class="head"><div class="num">B1</div><h2>Gast oder Rezeption?</h2><span class="part" id="pB1"></span></div>
+    <p class="hint">Хто це каже: гість, який просить про допомогу, чи працівник рецепції, який допомагає?</p>
+    <div id="B1"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">B2</div><h2>Ordnen Sie die Gespräche</h2><span class="part" id="pB2"></span></div>
+    <p class="hint">Склади діалог у правильному порядку. Помилився? Натисни на репліку вгорі, щоб повернути її назад.</p>
+    <div id="B2" style="display:grid;gap:24px"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">B3</div><h2>Wie reagieren Sie?</h2><span class="part" id="pB3"></span></div>
+    <p class="hint">Прочитай ситуацію й обери найкращу відповідь.</p>
+    <div id="B3"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">B4</div><h2>Ergänzen Sie das Gespräch</h2><span class="part" id="pB4"></span></div>
+    <p class="hint">Обери в кожному полі правильне слово, потім натисни «Перевірити».</p>
+    <div class="dlg" id="B4"></div>
+    <div class="opts"><button class="btn" id="checkB4" type="button">Перевірити</button></div>
+    <div class="fb" id="fbB4"></div>
+  </section>
+
+  <section class="sheet final">
+    <h2 id="fTitle" style="flex:none">Результат</h2>
+    <div class="big" id="pct">—</div>
+    <p class="hint" id="fText">Виконай усі завдання, і тут з'явиться оцінка.</p>
+    <button class="btn ghost" id="reset" type="button">Почати знову</button>
+  </section>
+</div>
+
+<script>
+const VOC=[["der","Aufzug","ліфт"],["die","Klimaanlage","кондиціонер"],["die","Heizung","опалення"],["der","Fernseher","телевізор"],["das","Radio","радіо"],["die","Internetverbindung","інтернет"],["das","Licht","світло"],["die","Seife","мило"],["das","Handtuch","рушник"],["der","Bademantel","халат"],["der","Föhn","фен"],["der","Wecker","будильник"],["das","Telefon","телефон"],["die","Dusche","душ"],["das","Wasser","вода"],["die","Minibar","мінібар"],["das","Schwimmbad","басейн"],["das","Restaurant","ресторан"],["das","Zimmer","номер, кімната"],["der","Gast","гість"],["die","Rezeption","рецепція"],["der","Techniker","технік"]];
+const PHR=[
+ ["Um Hilfe bitten (гість)",[["Entschuldigung, können Sie mir helfen?","Вибачте, ви можете мені допомогти?"],["Wir haben ein Problem.","У нас проблема."],["Wir brauchen Ihre Hilfe.","Нам потрібна ваша допомога."],["Der Fernseher ist kaputt.","Телевізор зламаний."],["Die Heizung funktioniert nicht.","Опалення не працює."],["Es gibt keine Handtücher.","Немає рушників."],["Eine Bitte noch: Können Sie die Klimaanlage ausmachen?","Ще одне прохання: ви можете вимкнути кондиціонер?"]]],
+ ["Hilfe anbieten / reagieren (рецепція)",[["Was kann ich für Sie tun?","Що я можу для вас зробити?"],["Kann ich Ihnen helfen?","Можу я вам допомогти?"],["Das tut mir leid.","Мені шкода."],["Ich kümmere mich sofort darum.","Я негайно цим займусь."],["Ich komme sofort.","Я зараз прийду."],["Ich schicke einen Techniker.","Я пришлю техніка."],["Das kann ich nicht selbst reparieren.","Я не можу це полагодити сам."]]],
+ ["Auf Entschuldigungen reagieren",[["Kein Problem! / Das macht doch nichts.","Без проблем! / Нічого страшного. (вибачення прийнято)"],["Schade. / Wie dumm!","Шкода. / Як прикро! (віриш, але засмучений)"],["Seltsam! / Ach, wirklich?","Дивно! / Та невже? (не віриш)"]]]
+];
+const A3=[
+ ["Es ist sehr kalt im Zimmer. Die ___ funktioniert nicht.","Heizung",["Heizung","Dusche","Seife","Minibar"]],
+ ["Es ist sehr heiß. Die ___ ist kaputt.","Klimaanlage",["Klimaanlage","Internetverbindung","Seife","Dusche"]],
+ ["Ich kann keine E-Mails schreiben. Die ___ funktioniert nicht.","Internetverbindung",["Internetverbindung","Heizung","Klimaanlage","Dusche"]],
+ ["Hilfe! Wir stecken fest! Der ___ funktioniert nicht.","Aufzug",["Aufzug","Föhn","Wecker","Fernseher"]],
+ ["Ich möchte fernsehen, aber der ___ ist kaputt.","Fernseher",["Fernseher","Aufzug","Föhn","Bademantel"]],
+ ["Meine Haare sind nass. Wo ist der ___?","Föhn",["Föhn","Wecker","Fernseher","Aufzug"]],
+ ["Ich muss um 6 Uhr aufstehen, aber der ___ ist kaputt.","Wecker",["Wecker","Föhn","Bademantel","Aufzug"]],
+ ["Es ist so dunkel! Das ___ funktioniert nicht.","Licht",["Licht","Handtuch","Wasser","Radio"]],
+ ["Ich möchte meine Hände waschen, aber es gibt keine ___.","Seife",["Seife","Heizung","Minibar","Klimaanlage"]],
+ ["Nach der Dusche brauche ich ein ___.","Handtuch",["Handtuch","Licht","Radio","Telefon"]]
+];
+const A4=[["Seife","keine","die Seife"],["Handtuch","kein","das Handtuch"],["Föhn","keinen","der Föhn"],["Wasser","kein","das Wasser"],["Fernseher","keinen","der Fernseher"],["Internetverbindung","keine","die Internetverbindung"],["Wecker","keinen","der Wecker"],["Licht","kein","das Licht"]];
+const B1=[["Entschuldigung, können Sie mir helfen?","G"],["Die Heizung funktioniert nicht.","G"],["Wir brauchen Ihre Hilfe.","G"],["Eine Bitte noch: Können Sie die Klimaanlage ausmachen?","G"],["Der Fernseher ist kaputt.","G"],["Das ist sehr nett. Vielen Dank!","G"],["Was kann ich für Sie tun?","R"],["Kann ich Ihnen helfen?","R"],["Ich kümmere mich sofort darum.","R"],["Ich komme sofort.","R"],["Tut mir leid, das kann nur die Aufzugfirma machen.","R"],["Ich schicke einen Techniker.","R"]];
+const B2=[
+ ["Gespräch 1: Der Fernseher",[["R","Guten Abend! Was kann ich für Sie tun?"],["G","Guten Abend. Ich habe ein Problem: Der Fernseher in Zimmer 12 ist kaputt."],["R","Oh, das tut mir leid. Ich schicke sofort einen Techniker."],["G","Danke. Eine Bitte noch: Es gibt keine Handtücher."],["R","Ich kümmere mich sofort darum."],["G","Das ist sehr nett. Vielen Dank!"]]],
+ ["Gespräch 2: Der Aufzug",[["G","Hallo? Entschuldigung, können Sie mir helfen?"],["R","Ja, natürlich. Was ist passiert?"],["G","Wir haben ein Problem: Der Aufzug steckt fest!"],["R","Tut mir leid, das kann ich nicht selbst reparieren. Die Aufzugfirma kommt in einer halben Stunde."],["G","Eine halbe Stunde? Es ist sehr kalt hier!"],["R","Ich mache die Klimaanlage sofort aus."]]]
+];
+const B3=[
+ ["Ти працюєш на рецепції. Гість каже:","Das Licht in meinem Zimmer funktioniert nicht.",["Das tut mir leid. Ich komme sofort.","Kein Problem!","Ach, wirklich?"],"«Kein Problem» кажуть у відповідь на вибачення, а не на скаргу."],
+ ["Ти працюєш на рецепції. Гість підходить і каже:","Entschuldigung, können Sie mir helfen?",["Ja, gern. Was kann ich für Sie tun?","Das macht doch nichts.","Wie dumm!"],"Пропонуємо допомогу: «Was kann ich für Sie tun?»"],
+ ["Ти гість. Працівник полагодив опалення.","",["Das ist sehr nett. Vielen Dank!","Ich kümmere mich sofort darum.","Seltsam!"],"Дякуємо: «Das ist sehr nett. Vielen Dank!»"],
+ ["Друг запізнився на 10 хвилин. Ти віриш, і тобі це не заважає.","Tut mir leid, ich bin im Aufzug stecken geblieben.",["Ach, das macht doch nichts.","Ach, wirklich?","Was kann ich für Sie tun?"],"Вибачення прийнято: «Das macht doch nichts» / «Kein Problem»."],
+ ["Друг запізнився на годину. Ти віриш, але вечеря вже холодна.","Entschuldigung, ich habe deine Straße nicht gefunden.",["Wie dumm! Jetzt ist das Essen kalt.","Kein Problem!","Seltsam!"],"Віриш, але засмучений: «Schade» / «Wie dumm!»"],
+ ["Друг каже, що годинник зламався. Але ти бачиш, що годинник працює.","Tut mir leid, meine Uhr ist kaputt.",["Seltsam! Jetzt funktioniert deine Uhr doch.","Das macht doch nichts.","Ich komme sofort."],"Не віриш: «Seltsam!» / «Ach, wirklich?»"],
+ ["Ти працюєш на рецепції. Гість каже:","Es gibt keine Seife im Bad.",["Oh, das tut mir leid. Ich bringe sofort Seife.","Ach, das macht doch nichts.","Hast du Lust?"],"Скарга, тож вибачаємось і допомагаємо."],
+ ["Ти працюєш на рецепції. Гість каже:","Die Heizung funktioniert nicht. Es ist sehr kalt.",["Ich schicke sofort einen Techniker.","Schade.","Passt es Ihnen am Freitag?"],"Пропонуємо рішення: «Ich schicke einen Techniker»."],
+ ["Ти гість і хочеш ввічливо попросити вимкнути кондиціонер.","",["Eine Bitte noch: Können Sie die Klimaanlage ausmachen?","Mach die Klimaanlage aus!","Die Klimaanlage ist ein Problem."],"Ввічливе прохання: «Können Sie …?» Наказ «Mach …!» звучить грубо."],
+ ["Ти гість. У номері немає фену.","",["Entschuldigung, es gibt keinen Föhn im Zimmer.","Entschuldigung, es gibt keine Föhn im Zimmer.","Ich kümmere mich darum."],"der Föhn → keinen Föhn (Akkusativ)."]
+];
+const B4BANK=["Was kann","Es gibt","funktioniert","das tut","kümmere","nett","komme"];
+const B4=[["G","Entschuldigung, können Sie mir helfen?"],["R","Ja, gern. {Was kann} ich für Sie tun?"],["G","{Es gibt} keine Seife in der Dusche. Und der Föhn {funktioniert} nicht."],["R","Oh, {das tut} mir leid. Ich {kümmere} mich sofort darum. Ich {komme} sofort."],["G","Das ist sehr {nett}. Vielen Dank!"]];
+const B4N=7;
+const N={A1:10,A2:12,A3:A3.length,A4:A4.length,B1:B1.length,B2:B2.length,B3:B3.length,B4:B4N};
+const TOTAL=Object.values(N).reduce((a,b)=>a+b,0);
+let score=0,done=0;const sc={};
+const $=id=>document.getElementById(id);
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let voice=false;try{voice="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined"}catch(e){}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=.85;const v=speechSynthesis.getVoices().find(v=>/^de/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+function add(k,ok){sc[k].d++;if(ok){sc[k].s++;score++}done++;upd()}
+function upd(){$("score").textContent=score+" / "+TOTAL;$("fill").style.width=(done/TOTAL*100)+"%";
+ for(const k in sc)$("p"+k).textContent=sc[k].d?sc[k].s+" / "+N[k]:"";
+ if(done===TOTAL){const pc=Math.round(score/TOTAL*100);$("pct").textContent=pc+"%";
+  $("fTitle").textContent=pc>=90?"Super!":pc>=75?"Sehr gut!":pc>=55?"Gut, aber übe noch!":"Noch einmal üben!";
+  $("fText").textContent="Правильно: "+score+" з "+TOTAL+"."+(pc<75?" Повтори словничок і фрази вгорі й спробуй ще раз.":"")}}
+function choose(item,opts,right,key,after,cls){const o=el("div","opts");
+ opts.forEach(t=>{const b=el("button","opt"+(cls?" "+cls(t):""),t);b.type="button";b.dataset.v=t;b.onclick=()=>{
+  o.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.dataset.v===right)x.classList.add("right")});
+  const ok=t===right;if(!ok)b.classList.add("wrong");item.classList.add(ok?"ok":"bad");after(ok);add(key,ok)};o.appendChild(b)});return o}
+function gapLine(s){const line=el("div","sent");const [a,b]=s.split("___");const g=el("span","gap","?");if(a)line.append(a);line.appendChild(g);if(b)line.append(b);return [line,g]}
+const who=w=>el("span","who "+w,w==="G"?"Gast":"Rezeption");
+
+function build(){score=0;done=0;for(const k in N)sc[k]={s:0,d:0};
+ // glossary + phrases
+ $("gloss").innerHTML="";VOC.forEach(([a,w,u])=>{const d=el("div");const b=el("b");b.append(el("span","art-"+a,a)," "+w);d.append(b,el("span",null,u));$("gloss").appendChild(d)});
+ $("phr").innerHTML="";PHR.forEach(([h,list])=>{const box=el("div");box.appendChild(el("h3",null,h));const ul=el("ul");
+  list.forEach(([de,ua])=>{const li=el("li");if(voice){const b=el("button","say","▶");b.type="button";b.setAttribute("aria-label","Послухати");b.onclick=()=>say(de.replace(" / ",". "));li.appendChild(b)}
+   const d=el("div");d.append(de,el("small",null,ua));li.appendChild(d);ul.appendChild(li)});box.appendChild(ul);$("phr").appendChild(box)});
+ // A1
+ const a1=$("A1");a1.innerHTML="";
+ shuffle(VOC.slice(0,18)).slice(0,N.A1).forEach(([a,w,u])=>{const it=el("div","item");const s=el("div","sent");s.appendChild(el("span","ua",u));it.appendChild(s);
+  const right=a+" "+w;const opts=shuffle([right,...shuffle(VOC.filter(v=>v[1]!==w).slice(0,18)).slice(0,3).map(v=>v[0]+" "+v[1])]);
+  const fb=el("div","fb");it.appendChild(choose(it,opts,right,"A1",ok=>fb.textContent=ok?"Richtig!":"Правильно: "+right,null));it.appendChild(fb);a1.appendChild(it)});
+ // A2
+ const a2=$("A2");a2.innerHTML="";
+ shuffle(VOC).slice(0,N.A2).forEach(([a,w,u])=>{const it=el("div","item");const [line,g]=gapLine("___ "+w);line.appendChild(el("span","ctx","("+u+")"));it.appendChild(line);
+  const fb=el("div","fb");it.appendChild(choose(it,["der","das","die"],a,"A2",ok=>{g.textContent=a;fb.textContent=ok?"Richtig!":"Правильно: "+a+" "+w},t=>t));it.appendChild(fb);a2.appendChild(it)});
+ // A3
+ const a3=$("A3");a3.innerHTML="";
+ shuffle(A3).forEach(([s,r,opts])=>{const it=el("div","item");const [line,g]=gapLine(s);it.appendChild(line);
+  const fb=el("div","fb");it.appendChild(choose(it,shuffle(opts),r,"A3",ok=>{g.textContent=r;fb.textContent=ok?"Richtig!":"Правильно: "+r},()=>"w"));it.appendChild(fb);a3.appendChild(it)});
+ // A4
+ const a4=$("A4");a4.innerHTML="";
+ shuffle(A4).forEach(([w,r,why])=>{const it=el("div","item");const [line,g]=gapLine("Es gibt ___ "+w+".");it.appendChild(line);
+  const fb=el("div","fb");it.appendChild(choose(it,["kein","keine","keinen"],r,"A4",ok=>{g.textContent=r;fb.textContent=(ok?"Richtig! ":"Falsch. ")+why+" → "+r+" "+w},()=>"w"));it.appendChild(fb);a4.appendChild(it)});
+ // B1
+ const b1=$("B1");b1.innerHTML="";
+ shuffle(B1).forEach(([s,r])=>{const it=el("div","item");const line=el("div","sent");line.append("„"+s+"“");it.appendChild(line);
+  const o=el("div","opts");const fb=el("div","fb");
+  [["G","Gast"],["R","Rezeption"]].forEach(([k,l])=>{const b=el("button","opt w "+k,l);b.type="button";b.onclick=()=>{
+   o.querySelectorAll("button").forEach(x=>x.disabled=true);const ok=k===r;b.classList.add(ok?"right":"wrong");
+   if(!ok)o.querySelector("."+r).classList.add("right");it.classList.add(ok?"ok":"bad");fb.textContent=ok?"Richtig!":"Це каже "+(r==="G"?"гість":"рецепція")+".";add("B1",ok)};o.appendChild(b)});
+  it.append(o,fb);b1.appendChild(it)});
+ // B2
+ const b2=$("B2");b2.innerHTML="";
+ B2.forEach(([title,lines],di)=>{const box=el("div","order");box.appendChild(el("h3",null,title));
+  const chain=el("div","chain"),pool=el("div","pool");const btn=el("button","btn","Перевірити порядок");btn.type="button";btn.disabled=true;
+  const it=el("div","item");it.style.border="0";it.style.padding="0";const fb=el("div","fb");it.appendChild(fb);let locked=false;
+  let mix=shuffle(lines);while(mix[0]===lines[0])mix=shuffle(lines);
+  mix.forEach(([w,t])=>{const b=el("button","opt line "+w);b.type="button";b.dataset.t=t;b.append(who(w),el("span",null,t));
+   b.onclick=()=>{if(locked)return;(b.parentNode===pool?chain:pool).appendChild(b);btn.disabled=chain.children.length!==lines.length};pool.appendChild(b)});
+  btn.onclick=()=>{locked=true;let all=true;[...chain.children].forEach((b,i)=>{b.disabled=true;if(b.dataset.t===lines[i][1])b.classList.add("right");else{b.classList.add("wrong");all=false}});
+   btn.hidden=true;it.classList.add(all?"ok":"bad");fb.textContent=all?"Richtig! Прочитай діалог уголос.":"Правильний порядок: "+lines.map((l,i)=>(i+1)+". "+l[1]).join(" ");add("B2",all)};
+  const r=el("div","opts");r.appendChild(btn);box.append(chain,pool,r,it);b2.appendChild(box)});
+ // B3
+ const b3=$("B3");b3.innerHTML="";
+ shuffle(B3).forEach(([sit,line,opts,why])=>{const it=el("div","item");it.appendChild(el("div","ctx",sit));
+  if(line){const s=el("div","sent");s.append("„"+line+"“");it.appendChild(s)}
+  const fb=el("div","fb");it.appendChild(choose(it,shuffle(opts),opts[0],"B3",ok=>fb.textContent=(ok?"Richtig! ":"Краще: «"+opts[0]+"». ")+why,null));it.appendChild(fb);b3.appendChild(it)});
+ // B4
+ const b4=$("B4");b4.innerHTML="";let gi=0;$("checkB4").hidden=false;$("fbB4").textContent="";$("fbB4").className="fb";
+ B4.forEach(([w,t])=>{const row=el("div","dl");row.appendChild(who(w));const d=el("div");
+  t.split(/(\{[^}]+\})/).forEach(p=>{if(p.startsWith("{")){const ans=p.slice(1,-1);const s=el("select");s.id="b4_"+(gi++);s.dataset.ans=ans;s.setAttribute("aria-label","Пропуск");
+    s.appendChild(new Option("…",""));B4BANK.forEach(o=>s.appendChild(new Option(o,o)));d.appendChild(s)}else if(p)d.append(p)});
+  row.appendChild(d);b4.appendChild(row)});
+ $("pct").textContent="—";$("fTitle").textContent="Результат";$("fText").textContent="Виконай усі завдання, і тут з'явиться оцінка.";upd()}
+
+$("checkB4").onclick=()=>{const ss=[...$("B4").querySelectorAll("select")];const e=ss.find(s=>!s.value);
+ if(e){e.focus();$("fbB4").className="fb bad";$("fbB4").textContent="Заповни всі пропуски, потім перевір.";return}
+ let n=0;ss.forEach(s=>{const ok=s.value===s.dataset.ans;s.disabled=true;s.classList.add(ok?"ok":"bad");if(!ok)s.value=s.dataset.ans;if(ok)n++;add("B4",ok)});
+ $("checkB4").hidden=true;$("fbB4").className="fb "+(n===B4N?"ok":"bad");$("fbB4").textContent=n===B4N?"Усе правильно!":"Правильно "+n+" з "+B4N+". Червоні поля тепер показують правильну відповідь."};
+$("reset").onclick=()=>{build();window.scrollTo({top:0,behavior:"smooth"})};
+build();
+</script>
+
+<a class="home-link" href="index.html" style="position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;font:700 15px Rubik,system-ui,sans-serif;background:#222;color:#fff;text-decoration:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)">← Усі вправи</a>
+</body>
+</html>

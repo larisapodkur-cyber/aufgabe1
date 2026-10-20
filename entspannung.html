@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entspannungsübungen</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}.wrap{padding-bottom:80px!important}</style>
+</head>
+<body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: calm single column of task sheets, sticky progress bar; teal = relaxation, coral = tension */
+:root{
+  --bg:#eaf3f1; --sheet:#ffffff; --ink:#173430; --muted:#55716c; --line:#d3e4e0;
+  --teal:#13887a; --teal-ink:#ffffff; --chip:#e1efec; --coral:#e2674a;
+  --ok:#1f9d55; --ok-bg:#dcf4e5; --bad:#cf4040; --bad-bg:#fbe2e2;
+  --display:"Rubik",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif; --shadow:0 2px 0 #cadfda;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1c1a; --sheet:#162826; --ink:#e4f2ef; --muted:#9bbab4; --line:#24403c;
+  --teal:#4cc7b6; --teal-ink:#08201d; --chip:#1f3734; --coral:#ff8f73;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #08110f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1c1a; --sheet:#162826; --ink:#e4f2ef; --muted:#9bbab4; --line:#24403c;
+  --teal:#4cc7b6; --teal-ink:#08201d; --chip:#1f3734; --coral:#ff8f73;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #08110f; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:740px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,6.5vw,42px);font-weight:800;line-height:1.1}
+h1 span{color:var(--teal)}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.sheet{background:var(--sheet);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;gap:12px}
+.head{display:flex;gap:12px;align-items:center}
+.num{font:800 18px var(--display);background:var(--teal);color:var(--teal-ink);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+h2{font-size:21px;font-weight:700}
+.hint{color:var(--muted);font-size:15px;margin:0}
+.q{display:grid;gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.q:first-child{border-top:0}
+.sent{font-size:19px;font-weight:600;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--teal);text-align:center;font:700 19px var(--display);color:var(--teal);padding:0 6px}
+.q.ok .gap{color:var(--ok);border-color:var(--ok)} .q.bad .gap{color:var(--bad);border-color:var(--bad)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:600 16px var(--body);border:2px solid var(--teal);background:transparent;color:var(--ink);border-radius:12px;padding:8px 14px;cursor:pointer;min-height:44px;text-align:left}
+.opt.word{font:700 18px var(--display);color:var(--teal)}
+.opt:hover:not(:disabled){background:var(--chip)}
+.opt:focus-visible,.inp:focus-visible,.btn:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.opt.right{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.fb{font-size:15px;font-weight:700;min-height:1.2em}
+.q.ok .fb{color:var(--ok)} .q.bad .fb{color:var(--bad)}
+.inp{font:700 18px var(--display);width:130px;max-width:100%;border:2px solid var(--teal);border-radius:10px;padding:4px 10px;background:var(--sheet);color:var(--ink);text-align:center}
+.q.ok .inp{border-color:var(--ok);background:var(--ok-bg)} .q.bad .inp{border-color:var(--bad);background:var(--bad-bg)}
+.btn{font:700 16px var(--display);background:var(--teal);color:var(--teal-ink);border:0;border-radius:12px;padding:10px 18px;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.listen{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.reveal{font:700 18px var(--display);color:var(--teal)}
+.inf{font:700 18px var(--display);min-width:120px;color:var(--muted)}
+/* ordering */
+.pool,.chain{display:flex;flex-direction:column;gap:8px}
+.chain{counter-reset:s}
+.chain .opt{counter-increment:s;border-style:solid}
+.chain .opt::before{content:counter(s) ". ";font-weight:800;color:var(--teal)}
+.chain:empty::after{content:"Тут з'являтимуться кроки у твоєму порядку";color:var(--muted);font-size:15px;border:2px dashed var(--line);border-radius:12px;padding:12px}
+/* glossary */
+.gl{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+@media (max-width:560px){.gl{grid-template-columns:1fr}}
+.gl div{padding:6px 0;border-bottom:1px solid var(--line)}
+.gl b{font-family:var(--display);font-weight:700;display:block}
+.gl small{color:var(--muted)}
+details summary{cursor:pointer;font:700 17px var(--display);color:var(--teal)}
+/* score */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sheet);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--teal);transition:width .3s}
+.score{font:800 17px var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.final{text-align:center;justify-items:center}
+.big{font:800 44px var(--display);color:var(--teal);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Büro-<span>Tiefenentspannung</span></h1>
+    <p class="lead">Перевір, чи знаєш команди з вправи на розслаблення (Lektion 9, AB). П'ять завдань: від аудіювання до самостійного утворення наказового способу.</p>
+  </header>
+
+  <div class="bar" role="status" aria-live="polite">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">0 / 0</div>
+  </div>
+
+  <section class="sheet">
+    <details>
+      <summary>Словничок (відкрий, якщо треба повторити)</summary>
+      <div class="gl" id="gloss" style="margin-top:12px"></div>
+    </details>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">1</div><h2>Hör zu und wähle!</h2></div>
+    <p class="hint" id="t1hint">Натисни «Послухати», потім обери переклад команди. Текст з'явиться після відповіді.</p>
+    <div id="t1"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">2</div><h2>Welches Verb passt?</h2></div>
+    <p class="hint">Обери дієслово, яке пасує до команди.</p>
+    <div id="t2"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">3</div><h2>Was fehlt?</h2></div>
+    <p class="hint">Впиши пропущене слово. Підказка: переклад під реченням.</p>
+    <div id="t3"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">4</div><h2>Imperativ: du-Form</h2></div>
+    <p class="hint">Утвори наказовий спосіб від інфінітива (форма для «du», без займенника).</p>
+    <div id="t4"></div>
+  </section>
+
+  <section class="sheet" id="s5">
+    <div class="head"><div class="num">5</div><h2>Die Schulter-Übung</h2></div>
+    <p class="hint">Склади вправу для плечей у правильному порядку: натискай кроки один за одним. Помилився? Натисни на крок у списку, щоб повернути його.</p>
+    <div class="chain" id="chain"></div>
+    <div class="pool" id="pool"></div>
+    <div class="opts"><button class="btn" id="checkOrder" type="button" disabled>Перевірити порядок</button></div>
+    <div class="q" id="orderQ" style="border:0;padding:0"><div class="fb"></div></div>
+  </section>
+
+  <section class="sheet final">
+    <h2 id="fTitle">Результат</h2>
+    <div class="big" id="pct">—</div>
+    <p class="hint" id="fText">Виконай усі завдання, і тут з'явиться оцінка.</p>
+    <button class="btn ghost" id="reset" type="button">Почати знову</button>
+  </section>
+</div>
+
+<script>
+const ALL=[
+ ["Leg dich bequem hin!","Ляж зручно!"],
+ ["Setz dich bequem hin!","Сядь зручно!"],
+ ["Stell dich bequem hin!","Стань зручно!"],
+ ["Schließ deine Augen!","Заплющ очі!"],
+ ["Atme einige Male tief ein und aus!","Кілька разів глибоко вдихни й видихни!"],
+ ["Zieh die Schultern hoch!","Підніми плечі вгору!"],
+ ["Spann die Schultern an!","Напруж плечі!"],
+ ["Spür die Anspannung!","Відчуй напругу!"],
+ ["Lass die Schultern langsam sinken!","Повільно опусти плечі!"],
+ ["Spür die Entspannung!","Відчуй розслаблення!"],
+ ["Senk den Kopf nach vorne!","Опусти голову вперед!"],
+ ["Bring den Kopf wieder zur Mitte!","Поверни голову в центр!"],
+ ["Entspann dein Gesicht!","Розслаб обличчя!"],
+ ["Falt die Hände hinter dem Kopf!","Склади руки за головою!"],
+ ["Heb den Brustkorb langsam!","Повільно підніми грудну клітку!"],
+ ["Halt den Brustkorb oben!","Тримай грудну клітку вгорі!"],
+ ["Senk den Brustkorb wieder!","Знову опусти грудну клітку!"]
+];
+const T2=[
+ ["___ deine Augen!","Schließ",["Schließ","Spür","Heb","Lass"],"Заплющ очі!"],
+ ["___ die Schultern hoch!","Zieh",["Zieh","Senk","Halt","Falt"],"Підніми плечі вгору!"],
+ ["___ die Schultern an!","Spann",["Spann","Bring","Atme","Leg"],"Напруж плечі!"],
+ ["___ die Schultern langsam sinken!","Lass",["Lass","Heb","Spür","Zieh"],"Повільно опусти плечі!"],
+ ["___ den Kopf wieder zur Mitte!","Bring",["Bring","Falt","Schließ","Spann"],"Поверни голову в центр!"],
+ ["___ die Hände hinter dem Kopf!","Falt",["Falt","Senk","Atme","Lass"],"Склади руки за головою!"],
+ ["___ den Brustkorb oben!","Halt",["Halt","Heb","Spür","Leg"],"Тримай грудну клітку вгорі!"],
+ ["___ dein Gesicht!","Entspann",["Entspann","Zieh","Bring","Senk"],"Розслаб обличчя!"]
+];
+const T3=[
+ ["Leg dich bequem","!",["hin"],"Ляж зручно!"],
+ ["Atme einige Male tief ein und","!",["aus"],"Кілька разів глибоко вдихни й видихни!"],
+ ["Zieh die Schultern","!",["hoch"],"Підніми плечі вгору!"],
+ ["Spür die","!",["Anspannung"],"Відчуй напругу!"],
+ ["Senk den Kopf nach","!",["vorne","vorn"],"Опусти голову вперед!"],
+ ["Entspann dein","!",["Gesicht"],"Розслаб обличчя!"],
+ ["Falt die Hände hinter dem","!",["Kopf"],"Склади руки за головою!"],
+ ["Halt den Brustkorb","!",["oben"],"Тримай грудну клітку вгорі!"]
+];
+const T4=[
+ ["schließen",["schließ","schließe"],"Schließ"],
+ ["heben",["heb","hebe"],"Heb"],
+ ["halten",["halt","halte"],"Halt"],
+ ["senken",["senk","senke"],"Senk"],
+ ["entspannen",["entspann","entspanne"],"Entspann"],
+ ["atmen",["atme"],"Atme (після -m- потрібне -e!)"]
+];
+const ORDER=["Zieh die Schultern hoch!","Spann die Schultern an!","Spür die Anspannung!","Lass die Schultern langsam sinken!","Spür die Entspannung!"];
+const T1N=8, TOTAL=T1N+T2.length+T3.length+T4.length+1;
+let score=0,done=0;
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.trim().toLowerCase().replace(/ss/g,"ß").replace(/[!.]/g,"").trim();
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+
+let voiceOK=false;
+try{voiceOK="speechSynthesis" in window && typeof SpeechSynthesisUtterance!=="undefined"}catch(e){}
+function say(text){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="de-DE";u.rate=.85;
+ const v=speechSynthesis.getVoices().find(v=>/^de/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+
+function upd(){$("score").textContent=score+" / "+TOTAL;$("fill").style.width=(done/TOTAL*100)+"%";
+ if(done===TOTAL){const p=Math.round(score/TOTAL*100);$("pct").textContent=p+"%";
+  $("fTitle").textContent=p>=90?"Ausgezeichnet!":p>=70?"Sehr gut!":p>=50?"Gut, aber übe noch!":"Noch einmal üben!";
+  $("fText").textContent="Правильних відповідей: "+score+" з "+TOTAL+"."+(p<70?" Повтори словничок і спробуй ще раз.":"")}}
+function mark(q,ok,msg){q.classList.add(ok?"ok":"bad");if(ok)score++;done++;q.querySelector(".fb").textContent=ok?"Richtig!":"Falsch. "+msg;upd()}
+function choices(q,list,right,cls,cb){const o=el("div","opts");
+ list.forEach(t=>{const b=el("button","opt"+(cls?" "+cls:""),t);b.type="button";
+  b.onclick=()=>{o.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===right)x.classList.add("right")});
+   const ok=t===right;if(!ok)b.classList.add("wrong");cb(ok)};o.appendChild(b)});return o}
+
+function build(){score=0;done=0;
+ $("gloss").innerHTML="";ALL.forEach(([d,u])=>{const x=el("div");x.append(el("b",null,d),el("small",null,u));$("gloss").appendChild(x)});
+ // T1 listening
+ const t1=$("t1");t1.innerHTML="";
+ if(!voiceOK)$("t1hint").textContent="Твій браузер не вміє озвучувати текст, тож прочитай команду й обери переклад.";
+ shuffle(ALL).slice(0,T1N).forEach(([de,ua])=>{const q=el("div","q");
+  const top=el("div","listen");
+  const txt=el("span","reveal",de);
+  if(voiceOK){const b=el("button","btn","▶ Послухати");b.type="button";b.onclick=()=>say(de);top.appendChild(b);txt.hidden=true}
+  top.appendChild(txt);q.appendChild(top);
+  const opts=shuffle([ua,...shuffle(ALL.filter(a=>a[1]!==ua)).slice(0,3).map(a=>a[1])]);
+  q.appendChild(choices(q,opts,ua,"",ok=>{txt.hidden=false;mark(q,ok,"Правильно: "+ua)}));
+  q.appendChild(el("div","fb"));t1.appendChild(q)});
+ // T2 verb choice
+ const t2=$("t2");t2.innerHTML="";
+ shuffle(T2).forEach(([s,r,opts,ua])=>{const q=el("div","q");const line=el("div","sent");
+  const g=el("span","gap","?");line.append(g,s.replace("___ ",""));q.appendChild(line);q.appendChild(el("div","hint",ua));
+  q.appendChild(choices(q,shuffle(opts),r,"word",ok=>{g.textContent=r;mark(q,ok,"Правильно: "+r)}));
+  q.appendChild(el("div","fb"));t2.appendChild(q)});
+ // typing helpers
+ const typeTask=(box,before,after,answers,ua,show,id)=>{const q=el("div","q");const line=el("div","sent");
+  const inp=el("input","inp");inp.id=id;inp.autocomplete="off";inp.setAttribute("autocapitalize","off");inp.setAttribute("spellcheck","false");inp.setAttribute("aria-label","Відповідь");
+  if(before)line.append(before.nodeType?before:document.createTextNode(before));line.appendChild(inp);if(after)line.append(after);q.appendChild(line);
+  if(ua)q.appendChild(el("div","hint",ua));
+  const b=el("button","btn","Перевірити");b.type="button";const r=el("div","opts");r.appendChild(b);q.appendChild(r);
+  const check=()=>{const v=norm(inp.value);if(!v){inp.focus();return}inp.disabled=true;b.hidden=true;
+   mark(q,answers.some(a=>norm(a)===v),"Правильно: "+show)};
+  b.onclick=check;inp.addEventListener("keydown",e=>{if(e.key==="Enter")check()});
+  q.appendChild(el("div","fb"));box.appendChild(q)};
+ $("t3").innerHTML="";shuffle(T3).forEach(([a,b,ans,ua],i)=>typeTask($("t3"),a+" ",b,ans,ua,ans[0],"t3_"+i));
+ $("t4").innerHTML="";T4.forEach(([inf,ans,show],i)=>typeTask($("t4"),el("span","inf",inf+" →"),null,ans,null,show,"t4_"+i));
+ buildOrder();upd();$("pct").textContent="—";$("fTitle").textContent="Результат";$("fText").textContent="Виконай усі завдання, і тут з'явиться оцінка."}
+
+let orderDone=false;
+function buildOrder(){orderDone=false;const pool=$("pool"),chain=$("chain");pool.innerHTML="";chain.innerHTML="";
+ const q=$("orderQ");q.className="q";q.style.border="0";q.style.padding="0";q.querySelector(".fb").textContent="";
+ $("checkOrder").disabled=true;$("checkOrder").hidden=false;
+ let mix=shuffle(ORDER);while(mix.join()===ORDER.join())mix=shuffle(ORDER);
+ mix.forEach(t=>{const b=el("button","opt",t);b.type="button";b.onclick=()=>{if(orderDone)return;
+  (b.parentNode===pool?chain:pool).appendChild(b);$("checkOrder").disabled=chain.children.length!==ORDER.length};pool.appendChild(b)})}
+$("checkOrder").onclick=()=>{orderDone=true;const items=[...$("chain").children];let all=true;
+ items.forEach((b,i)=>{b.disabled=true;if(b.textContent===ORDER[i])b.classList.add("right");else{b.classList.add("wrong");all=false}});
+ $("checkOrder").hidden=true;mark($("orderQ"),all,"Правильний порядок: "+ORDER.map((t,i)=>(i+1)+". "+t).join(" "))};
+$("reset").onclick=()=>{build();window.scrollTo({top:0,behavior:"smooth"})};
+build();
+</script>
+
+<a class="home-link" href="index.html" style="position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;font:700 15px Rubik,system-ui,sans-serif;background:#222;color:#fff;text-decoration:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)">← Усі вправи</a>
+</body>
+</html>

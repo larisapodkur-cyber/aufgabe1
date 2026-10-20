@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>vor, nach, in, für</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}.wrap{padding-bottom:80px!important}</style>
+</head>
+<body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: single column of task sheets; lesson-16 green; preposition colours on the timeline */
+:root{
+  --bg:#eef3e8; --sheet:#ffffff; --ink:#1f2a17; --muted:#5d6a52; --line:#d9e3cf;
+  --accent:#5a9a1b; --accent-ink:#ffffff; --chip:#e6f0da;
+  --vor:#2f73d9; --nach:#c4571d; --in:#7a4fd0; --fuer:#0f8a7a;
+  --ok:#1f9d55; --ok-bg:#dcf4e5; --bad:#cf4040; --bad-bg:#fbe2e2;
+  --display:"Rubik",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif; --shadow:0 2px 0 #d3dec6;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121a0e; --sheet:#1a2414; --ink:#e9f2e1; --muted:#a3b494; --line:#2c3a23;
+  --accent:#9bd35a; --accent-ink:#13200a; --chip:#25331c;
+  --vor:#6aa3ff; --nach:#ff9a5c; --in:#b495ff; --fuer:#4fd1bf;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #090d06; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121a0e; --sheet:#1a2414; --ink:#e9f2e1; --muted:#a3b494; --line:#2c3a23;
+  --accent:#9bd35a; --accent-ink:#13200a; --chip:#25331c;
+  --vor:#6aa3ff; --nach:#ff9a5c; --in:#b495ff; --fuer:#4fd1bf;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #090d06; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,6.5vw,42px);font-weight:800;line-height:1.1}
+.c-vor{color:var(--vor)}.c-nach{color:var(--nach)}.c-in{color:var(--in)}.c-fuer{color:var(--fuer)}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+p{margin:0}
+.sheet{background:var(--sheet);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;gap:12px;min-width:0}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.num{font:800 18px var(--display);background:var(--accent);color:var(--accent-ink);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+h2{font-size:21px;font-weight:700;flex:1;min-width:180px}
+.part{font:700 15px var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:15px}
+/* rules */
+details summary{cursor:pointer;font:700 18px var(--display);color:var(--accent)}
+.rules{display:grid;gap:16px;margin-top:12px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:540px){.cards{grid-template-columns:1fr}}
+.card{border:2px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:4px}
+.card b{font:800 22px var(--display)}
+.card .q{border:0;padding:0}
+.tl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.tl .now{background:var(--ink);color:var(--sheet);border-radius:8px;padding:4px 10px;font-family:var(--display)}
+.tl .l{text-align:right}
+.arrow{height:4px;border-radius:2px}
+.arts{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.arts td,.arts th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+.arts th{font:700 13px var(--display);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.scroll{overflow-x:auto}
+/* items */
+.item{display:grid;gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.item:first-child{border-top:0}
+.sent{font-size:18px;font-weight:600;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ctx{font-size:15px;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:700 17px var(--display);border:2px solid var(--accent);background:transparent;color:var(--ink);border-radius:12px;padding:6px 14px;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){background:var(--chip)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.gap{display:inline-block;min-width:70px;border-bottom:3px solid var(--accent);text-align:center;font:700 18px var(--display);color:var(--accent);padding:0 6px}
+.item.ok .gap{color:var(--ok);border-color:var(--ok)} .item.bad .gap{color:var(--bad);border-color:var(--bad)}
+.fb{font-size:15px;font-weight:700;min-height:1.2em}
+.item.ok .fb{color:var(--ok)} .item.bad .fb{color:var(--bad)}
+.inp{font:700 18px var(--display);width:160px;max-width:100%;border:2px solid var(--accent);border-radius:10px;padding:4px 10px;background:var(--sheet);color:var(--ink);text-align:center}
+.item.ok .inp{border-color:var(--ok);background:var(--ok-bg)} .item.bad .inp{border-color:var(--bad);background:var(--bad-bg)}
+.opt:focus-visible,.inp:focus-visible,.btn:focus-visible{outline:3px solid var(--in);outline-offset:2px}
+.btn{font:700 16px var(--display);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.ua{font-weight:800;color:var(--accent)}
+/* score */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--sheet);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.score{font:800 17px var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.final{text-align:center;justify-items:center}
+.big{font:800 44px var(--display);color:var(--accent);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1><span class="c-vor">vor</span>, <span class="c-nach">nach</span>, <span class="c-in">in</span>, <span class="c-fuer">für</span></h1>
+    <p class="lead">Menschen A1.2, Lektion 16: прийменники часу. Чотири завдання: значення, вибір прийменника, правильний артикль і самостійне письмо.</p>
+  </header>
+
+  <div class="bar" role="status" aria-live="polite">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">0 / 0</div>
+  </div>
+
+  <section class="sheet">
+    <details open>
+      <summary>Правило</summary>
+      <div class="rules">
+        <div class="cards">
+          <div class="card"><b class="c-vor">vor + Dativ</b><p><b style="font-size:inherit">тому</b> (у минулому): vor einem Jahr = рік тому</p><p><b style="font-size:inherit">перед</b> (подією): vor dem Kurs = перед курсом</p></div>
+          <div class="card"><b class="c-nach">nach + Dativ</b><p><b style="font-size:inherit">після</b> (події): nach dem Essen = після їжі</p></div>
+          <div class="card"><b class="c-in">in + Dativ</b><p><b style="font-size:inherit">через</b> (у майбутньому): in einer Stunde = через годину</p></div>
+          <div class="card"><b class="c-fuer">für + Akkusativ</b><p><b style="font-size:inherit">на</b> (скільки часу): für eine Woche = на тиждень</p></div>
+        </div>
+        <div style="display:grid;gap:10px">
+          <h3 style="font-size:16px">Wann? (Коли?)</h3>
+          <div class="tl"><span class="l c-vor">vor einem Jahr ←</span><span class="now">jetzt</span><span class="c-in">→ in einem Jahr</span></div>
+          <div class="tl"><span class="l c-vor">vor dem Kurs ←</span><span class="now">Kurs</span><span class="c-nach">→ nach dem Kurs</span></div>
+          <h3 style="font-size:16px">(Für) wie lange? (На скільки?)</h3>
+          <div class="tl"><span class="l c-fuer">für eine Woche</span><span class="now" style="background:var(--fuer)">———</span><span></span></div>
+        </div>
+        <div class="scroll"><table class="arts">
+          <tr><th></th><th>vor / nach / in (Dativ)</th><th>für (Akkusativ)</th></tr>
+          <tr><td>der Monat, Tag, Kurs</td><td>einem Monat · dem Kurs</td><td>einen Monat · einen Tag</td></tr>
+          <tr><td>das Jahr, Essen</td><td>einem Jahr · dem Essen</td><td>ein Jahr</td></tr>
+          <tr><td>die Stunde, Woche</td><td>einer Stunde · der Sitzung</td><td>eine Stunde · eine Woche</td></tr>
+          <tr><td>Plural</td><td>zwei Wochen · drei Jahre<b>n</b></td><td>zwei Wochen · drei Jahre</td></tr>
+        </table></div>
+        <p class="hint">У Dativ Plural до іменника додається <b>-n</b>: vor zwei Jahre<b>n</b>, in drei Monate<b>n</b>. Але: für drei Jahre, für zwei Monate (Akkusativ, без -n).</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">1</div><h2>Was bedeutet das?</h2><span class="part" id="p1"></span></div>
+    <p class="hint">Обери, як це сказати німецькою.</p>
+    <div id="t1"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">2</div><h2>vor, nach, in oder für?</h2><span class="part" id="p2"></span></div>
+    <p class="hint">Прочитай речення разом із підказкою і обери прийменник.</p>
+    <div id="t2"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">3</div><h2>Welcher Artikel?</h2><span class="part" id="p3"></span></div>
+    <p class="hint">vor, nach, in вимагають Dativ, а für вимагає Akkusativ. Обери правильну форму.</p>
+    <div id="t3"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">4</div><h2>Schreiben Sie!</h2><span class="part" id="p4"></span></div>
+    <p class="hint">Впиши прийменник і артикль або число (два слова), наприклад: <b>in einer</b>. Українська підказка в дужках.</p>
+    <div id="t4"></div>
+  </section>
+
+  <section class="sheet final">
+    <h2 id="fTitle" style="flex:none">Результат</h2>
+    <div class="big" id="pct">—</div>
+    <p class="hint" id="fText">Виконай усі завдання, і тут з'явиться оцінка.</p>
+    <button class="btn ghost" id="reset" type="button">Почати знову</button>
+  </section>
+</div>
+
+<script>
+const T1=[
+ ["через годину",["in einer Stunde","vor einer Stunde","für eine Stunde","nach einer Stunde"]],
+ ["рік тому",["vor einem Jahr","in einem Jahr","für ein Jahr","nach einem Jahr"]],
+ ["на тиждень",["für eine Woche","in einer Woche","vor einer Woche","nach einer Woche"]],
+ ["після уроку",["nach dem Unterricht","vor dem Unterricht","in dem Unterricht","für den Unterricht"]],
+ ["перед сніданком",["vor dem Frühstück","nach dem Frühstück","in dem Frühstück","für das Frühstück"]],
+ ["через два тижні",["in zwei Wochen","vor zwei Wochen","für zwei Wochen","nach zwei Wochen"]],
+ ["на один день",["für einen Tag","in einem Tag","vor einem Tag","nach einem Tag"]],
+ ["місяць тому",["vor einem Monat","in einem Monat","für einen Monat","nach einem Monat"]]
+];
+const T2=[
+ ["Der Techniker kommt ___ einer halben Stunde.","Зараз 15:00, технік прийде о 15:30.","in"],
+ ["Ich bin ___ zwei Jahren nach Deutschland gekommen.","Це було у 2024 році.","vor"],
+ ["Julia fährt ___ eine Woche in den Urlaub.","Вона буде у відпустці 7 днів.","für"],
+ ["Wir essen um 18.30 Uhr, also ___ dem Tanzkurs.","Танцювальний курс починається о 20:00.","vor"],
+ ["___ dem Kurs gehen wir nach Hause.","Курс закінчується о 22:00, додому йдемо о 22:10.","nach"],
+ ["Die Aufzugfirma kommt ___ einer Stunde.","Фірма приїде пізніше, не зараз.","in"],
+ ["Ich brauche das Auto nur ___ einen Tag.","Завтра поверну машину.","für"],
+ ["Peter hat ___ einem Jahr ein Praktikum in Japan gemacht.","Це вже в минулому.","vor"],
+ ["Wann bist du fertig? – ___ drei Monaten.","Відповідь про майбутнє.","in"],
+ ["___ der Sitzung rufe ich Herrn Feldmann an.","Спочатку засідання, потім дзвінок.","nach"]
+];
+const T3=[
+ ["vor ___ Jahr",["einem","einen","ein"],"einem","das Jahr → Dativ: einem"],
+ ["für ___ Tag",["einen","einem","ein"],"einen","der Tag → Akkusativ: einen"],
+ ["in ___ Stunde",["einer","eine","einem"],"einer","die Stunde → Dativ: einer"],
+ ["nach ___ Kurs",["dem","den","der"],"dem","der Kurs → Dativ: dem"],
+ ["für ___ Woche",["eine","einer","einen"],"eine","die Woche → Akkusativ: eine"],
+ ["vor ___ Sitzung",["der","die","dem"],"der","die Sitzung → Dativ: der"],
+ ["nach ___ Essen",["dem","das","den"],"dem","das Essen → Dativ: dem"],
+ ["für ___ Jahr",["ein","einem","einen"],"ein","das Jahr → Akkusativ: ein"],
+ ["in zwei ___",["Monaten","Monate","Monat"],"Monaten","Dativ Plural: + n"],
+ ["für drei ___",["Monate","Monaten","Monat"],"Monate","Akkusativ Plural: без -n"]
+];
+const T4=[
+ ["Wann bist du mit dem Studium fertig? –","Jahr.","через рік",["in einem"]],
+ ["Und was machst du","Studium?","після",["nach dem"]],
+ ["Ich gehe","Jahre nach London.","на два роки",["für zwei"]],
+ ["Warst du schon einmal in England? – Ja,","Jahren.","п'ять років тому",["vor fünf","vor 5"]],
+ ["Die Sitzung beginnt","Stunde.","через годину",["in einer"]],
+ ["","Sitzung rufe ich Sie an.","після засідання",["nach der"]],
+ ["Ich bleibe","Woche in Berlin.","на тиждень",["für eine"]],
+ ["Wir treffen uns","Kino.","перед кіно",["vor dem"]]
+];
+const TOTAL=T1.length+T2.length+T3.length+T4.length;
+let score=0,done=0;const sc={};
+const $=id=>document.getElementById(id);
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.trim().toLowerCase().replace(/\s+/g," ").replace(/ss/g,"ß").replace(/[.!?,]/g,"");
+function add(k,ok){sc[k].d++;if(ok){sc[k].s++;score++}done++;upd()}
+function upd(){$("score").textContent=score+" / "+TOTAL;$("fill").style.width=(done/TOTAL*100)+"%";
+ for(const k in sc)$("p"+k).textContent=sc[k].d?sc[k].s+" / "+sc[k].n:"";
+ if(done===TOTAL){const pc=Math.round(score/TOTAL*100);$("pct").textContent=pc+"%";
+  $("fTitle").textContent=pc>=90?"Super!":pc>=75?"Sehr gut!":pc>=55?"Gut, aber übe noch!":"Noch einmal üben!";
+  $("fText").textContent="Правильно: "+score+" з "+TOTAL+"."+(pc<75?" Повтори правило вгорі й спробуй ще раз.":"")}}
+function choose(item,opts,right,key,after){const o=el("div","opts");
+ opts.forEach(t=>{const b=el("button","opt",t);b.type="button";b.onclick=()=>{
+  o.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===right)x.classList.add("right")});
+  const ok=t===right;if(!ok)b.classList.add("wrong");item.classList.add(ok?"ok":"bad");after(ok);add(key,ok)};o.appendChild(b)});return o}
+function gapLine(s){const line=el("div","sent");const [a,b]=s.split("___");const g=el("span","gap","?");if(a)line.append(a);line.appendChild(g);if(b)line.append(b);return [line,g]}
+
+function build(){score=0;done=0;
+ sc[1]={s:0,d:0,n:T1.length};sc[2]={s:0,d:0,n:T2.length};sc[3]={s:0,d:0,n:T3.length};sc[4]={s:0,d:0,n:T4.length};
+ const t1=$("t1");t1.innerHTML="";
+ shuffle(T1).forEach(([ua,opts])=>{const it=el("div","item");const s=el("div","sent");s.appendChild(el("span","ua",ua));it.appendChild(s);
+  const fb=el("div","fb");it.appendChild(choose(it,shuffle(opts),opts[0],1,ok=>fb.textContent=ok?"Richtig!":"Правильно: "+opts[0]));it.appendChild(fb);t1.appendChild(it)});
+ const t2=$("t2");t2.innerHTML="";
+ shuffle(T2).forEach(([s,ctx,r])=>{const it=el("div","item");const [line,g]=gapLine(s);it.append(line,el("div","ctx",ctx));
+  const fb=el("div","fb");it.appendChild(choose(it,["vor","nach","in","für"],r,2,ok=>{g.textContent=r;fb.textContent=ok?"Richtig!":"Правильно: "+r}));it.appendChild(fb);t2.appendChild(it)});
+ const t3=$("t3");t3.innerHTML="";
+ shuffle(T3).forEach(([s,opts,r,why])=>{const it=el("div","item");const [line,g]=gapLine(s);it.appendChild(line);
+  const fb=el("div","fb");it.appendChild(choose(it,shuffle(opts),r,3,ok=>{g.textContent=r;fb.textContent=(ok?"Richtig! ":"Falsch. ")+why}));it.appendChild(fb);t3.appendChild(it)});
+ const t4=$("t4");t4.innerHTML="";
+ T4.forEach(([a,b,ua,ans],i)=>{const it=el("div","item");const line=el("div","sent");
+  const inp=el("input","inp");inp.id="t4_"+i;inp.autocomplete="off";inp.spellcheck=false;inp.setAttribute("autocapitalize","off");inp.setAttribute("aria-label",ua);
+  if(a)line.append(a);line.append(inp,b);it.appendChild(line);it.appendChild(el("div","ctx","("+ua+")"));
+  const r=el("div","opts");const btn=el("button","btn","Перевірити");btn.type="button";r.appendChild(btn);it.appendChild(r);
+  const fb=el("div","fb");it.appendChild(fb);
+  const check=()=>{const v=norm(inp.value);if(!v){inp.focus();return}const ok=ans.some(x=>norm(x)===v);
+   inp.disabled=true;btn.hidden=true;it.classList.add(ok?"ok":"bad");fb.textContent=ok?"Richtig!":"Правильно: "+ans[0];add(4,ok)};
+  btn.onclick=check;inp.addEventListener("keydown",e=>{if(e.key==="Enter")check()});t4.appendChild(it)});
+ $("pct").textContent="—";$("fTitle").textContent="Результат";$("fText").textContent="Виконай усі завдання, і тут з'явиться оцінка.";upd()}
+$("reset").onclick=()=>{build();window.scrollTo({top:0,behavior:"smooth"})};
+build();
+</script>
+
+<a class="home-link" href="index.html" style="position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;font:700 15px Rubik,system-ui,sans-serif;background:#222;color:#fff;text-decoration:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)">← Усі вправи</a>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feste und Glückwünsche</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: three parts (Feste / Glückwünsche / Wünsche) as stacked sheets; lesson-24 orange */
+:root{
+  --bg:#f6efe8; --sheet:#ffffff; --ink:#2a1f17; --muted:#6e5d50; --line:#ecdccd;
+  --accent:#e2601d; --accent-ink:#ffffff; --chip:#fbe7d8; --focus:#2f73d9;
+  --m:#2f73d9; --n:#2f9e5a; --f:#d9483b;
+  --ok:#1f9d55; --ok-bg:#dcf4e5; --bad:#cf4040; --bad-bg:#fbe2e2;
+  --display:"Rubik",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif; --shadow:0 2px 0 #e6d3c2;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1b140f; --sheet:#251c15; --ink:#f4ebe3; --muted:#bba796; --line:#3a2c21;
+  --accent:#ff8a4c; --accent-ink:#2a1206; --chip:#3a2a1e; --focus:#6aa3ff;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #0d0906; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1b140f; --sheet:#251c15; --ink:#f4ebe3; --muted:#bba796; --line:#3a2c21;
+  --accent:#ff8a4c; --accent-ink:#2a1206; --chip:#3a2a1e; --focus:#6aa3ff;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #0d0906; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding-block:24px 90px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(30px,7vw,44px);font-weight:800;line-height:1.1}
+h1 span{color:var(--accent)}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+p{margin:0}
+.partTitle{font:800 13px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.sheet{background:var(--sheet);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;gap:12px;min-width:0}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.num{font:800 16px var(--display);background:var(--accent);color:var(--accent-ink);min-width:38px;height:38px;border-radius:19px;padding:0 8px;display:grid;place-items:center;flex:none}
+h2{font-size:21px;font-weight:700;flex:1;min-width:180px}
+.part{font:700 15px var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:15px}
+details summary{cursor:pointer;font:700 18px var(--display);color:var(--accent)}
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px;margin-top:12px}
+@media (max-width:540px){.gl{grid-template-columns:1fr}}
+.gl div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line)}
+.gl b{font-family:var(--display);font-weight:700}
+.gl span{color:var(--muted);text-align:right}
+.gl h3{grid-column:1/-1;font-size:15px;color:var(--accent);margin-top:8px;border:0}
+.art-der{color:var(--m)}.art-das{color:var(--n)}.art-die{color:var(--f)}
+.conj{border-collapse:collapse;margin-top:10px}
+.conj td{padding:4px 14px 4px 0;font-weight:700}
+.conj td:nth-child(2){color:var(--accent);font-family:var(--display)}
+.item{display:grid;gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.item:first-child{border-top:0}
+.sent{font-size:18px;font-weight:600;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ctx{font-size:15px;color:var(--muted)}
+.ua{font-weight:800;color:var(--accent)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:700 16px var(--body);border:2px solid var(--accent);background:transparent;color:var(--ink);border-radius:12px;padding:6px 14px;cursor:pointer;min-height:44px;text-align:left}
+.opt.w{font:700 17px var(--display)}
+.opt:hover:not(:disabled){background:var(--chip)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.gap{display:inline-block;min-width:80px;border-bottom:3px solid var(--accent);text-align:center;font:700 18px var(--display);color:var(--accent);padding:0 6px}
+.item.ok .gap{color:var(--ok);border-color:var(--ok)} .item.bad .gap{color:var(--bad);border-color:var(--bad)}
+.fb{font-size:15px;font-weight:700;min-height:1.2em}
+.item.ok .fb{color:var(--ok)} .item.bad .fb{color:var(--bad)}
+.opt:focus-visible,.btn:focus-visible,.tok:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{font:700 16px var(--display);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.card{border:2px dashed var(--line);border-radius:14px;padding:12px 14px;font-size:16px;white-space:pre-line}
+.rf{display:flex;gap:8px}
+/* word order */
+.built{min-height:52px;border:2px dashed var(--line);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.built:empty::after{content:"Натискай слова внизу";color:var(--muted);font-size:15px}
+.toks{display:flex;flex-wrap:wrap;gap:6px}
+.tok{font:700 17px var(--display);border:2px solid var(--accent);background:var(--sheet);color:var(--ink);border-radius:10px;padding:4px 12px;cursor:pointer;min-height:40px}
+.item.ok .built{border-color:var(--ok);border-style:solid}.item.bad .built{border-color:var(--bad);border-style:solid}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--sheet);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.score{font:800 17px var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.final{text-align:center;justify-items:center}
+.big{font:800 44px var(--display);color:var(--accent);font-variant-numeric:tabular-nums}
+.home-link{position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;font:700 15px var(--display);background:var(--ink);color:var(--bg);text-decoration:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Feste und <span>Glückwünsche</span></h1>
+    <p class="lead">Menschen A1.2, Lektion 24. Частина A: свята. Частина B: як привітати. Частина C: побажання з «würde gern».</p>
+  </header>
+
+  <div class="bar" role="status" aria-live="polite">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">0 / 0</div>
+  </div>
+
+  <section class="sheet">
+    <details><summary>Словничок</summary><div class="gl" id="gloss"></div></details>
+    <details><summary>Konjunktiv II: würde</summary>
+      <table class="conj">
+        <tr><td>ich</td><td>würde</td></tr><tr><td>du</td><td>würdest</td></tr><tr><td>er / sie / es</td><td>würde</td></tr>
+        <tr><td>wir</td><td>würden</td></tr><tr><td>ihr</td><td>würdet</td></tr><tr><td>sie / Sie</td><td>würden</td></tr>
+      </table>
+      <p class="hint" style="margin-top:8px"><b>würde</b> стоїть на 2-му місці, інфінітив у кінці речення: Ich <b>würde</b> gern mit dir <b>feiern</b>. Означає «я б хотів(ла) …».</p>
+    </details>
+  </section>
+
+  <div class="partTitle">Teil A · Feste</div>
+  <section class="sheet">
+    <div class="head"><div class="num">A1</div><h2>Welches Fest ist das?</h2><span class="part" id="pA1"></span></div>
+    <p class="hint">Прочитай опис і обери свято.</p>
+    <div id="A1"></div>
+  </section>
+  <section class="sheet">
+    <div class="head"><div class="num">A2</div><h2>Wie heißt das auf Deutsch?</h2><span class="part" id="pA2"></span></div>
+    <div id="A2"></div>
+  </section>
+  <section class="sheet">
+    <div class="head"><div class="num">A3</div><h2>Einladungen: richtig oder falsch?</h2><span class="part" id="pA3"></span></div>
+    <div id="A3"></div>
+  </section>
+
+  <div class="partTitle">Teil B · Glückwünsche</div>
+  <section class="sheet">
+    <div class="head"><div class="num">B1</div><h2>Was sagen Sie?</h2><span class="part" id="pB1"></span></div>
+    <p class="hint">Обери привітання, яке пасує до ситуації.</p>
+    <div id="B1"></div>
+  </section>
+  <section class="sheet">
+    <div class="head"><div class="num">B2</div><h2>zum oder zur?</h2><span class="part" id="pB2"></span></div>
+    <p class="hint">Herzlichen Glückwunsch <b>zum</b> (der, das) / <b>zur</b> (die) …</p>
+    <div id="B2"></div>
+  </section>
+
+  <div class="partTitle">Teil C · Wünsche: würde gern</div>
+  <section class="sheet">
+    <div class="head"><div class="num">C1</div><h2>würde, würdest, würden …</h2><span class="part" id="pC1"></span></div>
+    <div id="C1"></div>
+  </section>
+  <section class="sheet">
+    <div class="head"><div class="num">C2</div><h2>Was bedeutet das?</h2><span class="part" id="pC2"></span></div>
+    <div id="C2"></div>
+  </section>
+  <section class="sheet">
+    <div class="head"><div class="num">C3</div><h2>Bauen Sie Sätze</h2><span class="part" id="pC3"></span></div>
+    <p class="hint">Натискай слова в правильному порядку. Натисни на слово у відповіді, щоб повернути його.</p>
+    <div id="C3"></div>
+  </section>
+
+  <section class="sheet final">
+    <h2 id="fTitle" style="flex:none">Результат</h2>
+    <div class="big" id="pct">—</div>
+    <p class="hint" id="fText">Виконай усі завдання, і тут з'явиться оцінка.</p>
+    <button class="btn ghost" id="reset" type="button">Почати знову</button>
+  </section>
+</div>
+<a class="home-link" href="index.html">← Усі вправи</a>
+
+<script>
+const GLOSS=[["Feste",[["","Weihnachten","Різдво"],["","Ostern","Великдень"],["das","Silvester","новорічна ніч, 31.12"],["das","Neujahr","Новий рік, 1.1"],["der","Geburtstag","день народження"],["die","Hochzeit","весілля"],["die","Einweihungsparty","новосілля"],["der","Karneval","карнавал"],["die","Überraschungsparty","вечірка-сюрприз"],["","Prüfung bestanden","іспит складено"]]],
+ ["Rund ums Fest",[["das","Fest","свято"],["die","Feier","святкування"],["","feiern","святкувати"],["die","Einladung","запрошення"],["","einladen","запрошувати"],["das","Geschenk","подарунок"],["","schenken","дарувати"],["der","Gutschein","сертифікат, ваучер"],["","gratulieren","вітати"],["der","Glückwunsch","привітання"]]],
+ ["Glückwünsche",[["","Herzlichen Glückwunsch!","Щиро вітаю!"],["","Alles Gute!","Усього найкращого!"],["","Frohe Weihnachten!","Веселого Різдва!"],["","Frohes / Gutes neues Jahr!","З Новим роком!"],["","Frohe Ostern!","Христос воскрес! / Зі святом Великодня!"],["","Gut gemacht!","Молодець!"]]]];
+const FESTE=["Weihnachten","Ostern","Silvester","Neujahr","der Geburtstag","die Hochzeit","die Einweihungsparty","der Karneval"];
+const A1=[
+ ["Am 24. und 25. Dezember. Es gibt einen Tannenbaum und Geschenke.","Weihnachten"],
+ ["Im Frühling. Die Kinder suchen Eier, der Hase bringt Schokolade.","Ostern"],
+ ["Am 31. Dezember. Um 24 Uhr gibt es Sekt und ein Feuerwerk.","Silvester"],
+ ["Am 1. Januar. Das Jahr beginnt.","Neujahr"],
+ ["Es gibt einen Kuchen mit Kerzen. Man ist ein Jahr älter.","der Geburtstag"],
+ ["Zwei Menschen heiraten. Es gibt Ringe und ein großes Essen.","die Hochzeit"],
+ ["Wir haben eine neue Wohnung und laden Freunde ein.","die Einweihungsparty"],
+ ["Im Februar. Die Menschen tragen Kostüme und Masken.","der Karneval"]
+];
+const A2=[["Різдво","Weihnachten"],["Великдень","Ostern"],["весілля","die Hochzeit"],["новосілля","die Einweihungsparty"],["подарунок","das Geschenk"],["запрошення","die Einladung"],["святкувати","feiern"],["дарувати","schenken"]];
+const A2POOL=["Weihnachten","Ostern","die Hochzeit","die Einweihungsparty","das Geschenk","die Einladung","feiern","schenken","der Gutschein","die Feier","einladen","gratulieren","der Karneval","Silvester"];
+const A3=[
+ ["Hallo Freunde!\nMax hat am Samstag Geburtstag. Er wird 30! Wir machen eine Überraschungsparty bei Lena.\nWann: Samstag, ab 19 Uhr.\nBitte bringt Getränke mit, Essen haben wir.\nAber psst! Max weiß nichts!",
+  [["Max wird 30 Jahre alt.",true],["Die Party ist bei Max.",false],["Die Gäste bringen Getränke mit.",true],["Max weiß von der Party.",false]]],
+ ["Liebe Oma,\nwir haben endlich eine Wohnung in Köln! Wir würden das gern mit dir feiern: bei unserer Einweihungsparty am Sonntag um 15 Uhr. Kommst du? Bitte antworte bis Mittwoch.\nDeine Anna und Tim",
+  [["Anna und Tim sind umgezogen.",true],["Die Party ist am Abend.",false],["Oma soll bis Mittwoch antworten.",true]]]
+];
+const B1=[
+ ["24. грудня. Ти телефонуєш бабусі.",["Frohe Weihnachten!","Gut gemacht!","Frohe Ostern!"]],
+ ["31 грудня, 24:00. Усі піднімають келихи.",["Frohes neues Jahr!","Frohe Weihnachten!","Alles Gute zum Geburtstag!"]],
+ ["Великдень. Ти пишеш листівку другові.",["Frohe Ostern!","Frohes neues Jahr!","Gut gemacht!"]],
+ ["Твій учень склав іспит на «sehr gut».",["Gut gemacht!","Frohe Weihnachten!","Frohes neues Jahr!"]],
+ ["У колеги сьогодні день народження.",["Alles Gute zum Geburtstag!","Frohe Ostern!","Gut gemacht!"]],
+ ["Твоя подруга виходить заміж.",["Herzlichen Glückwunsch zur Hochzeit!","Frohes neues Jahr!","Frohe Ostern!"]]
+];
+const B2=[["Geburtstag","zum","der Geburtstag"],["Hochzeit","zur","die Hochzeit"],["neuen Wohnung","zur","die Wohnung"],["Baby","zum","das Baby"],["bestandenen Prüfung","zur","die Prüfung"],["neuen Job","zum","der Job"]];
+const C1=[["Ich ___ gern nach Las Vegas fahren.","würde"],["___ du gern mit mir feiern?","Würdest"],["Wir ___ uns sehr freuen.","würden"],["Lisa ___ am liebsten jeden Tag tanzen.","würde"],["Was ___ ihr am Wochenende gern machen?","würdet"],["Meine Eltern ___ gern ans Meer fahren.","würden"]];
+const C1OPTS=["würde","würdest","würden","würdet"];
+const C2=[
+ ["Ich würde dich gern ins Kino einladen.",["Ich möchte mit dir ins Kino gehen. Hast du Zeit?","Wir waren gestern im Kino.","Du musst ins Kino gehen."]],
+ ["Wir würden das gern mit dir feiern.",["Wir möchten gern mit dir feiern. Kommst du?","Wir haben schon gefeiert.","Du feierst nicht mit uns."]],
+ ["Am liebsten würde ich jeden Morgen spät aufstehen.",["Das ist mein Wunsch, aber ich kann das nicht immer.","Ich stehe jeden Morgen spät auf.","Ich muss früh aufstehen und das finde ich toll."]]
+];
+const C3=[
+ ["Ich würde gern eine Reise machen","Я б хотіла поїхати в подорож."],
+ ["Wir würden gern mit dir feiern","Ми б хотіли відсвяткувати з тобою.","",["Wir würden mit dir gern feiern"]],
+ ["Würdest du gern ins Kino gehen","Ти б хотів піти в кіно?","?"],
+ ["Am liebsten würde ich jeden Tag feiern","Найбільше я б хотіла святкувати щодня."]
+];
+const N={A1:A1.length,A2:A2.length,A3:A3.reduce((a,x)=>a+x[1].length,0),B1:B1.length,B2:B2.length,C1:C1.length,C2:C2.length,C3:C3.length};
+const TOTAL=Object.values(N).reduce((a,b)=>a+b,0);
+let score=0,done=0;const sc={};
+const $=id=>document.getElementById(id);
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function add(k,ok){sc[k].d++;if(ok){sc[k].s++;score++}done++;upd()}
+function upd(){$("score").textContent=score+" / "+TOTAL;$("fill").style.width=(done/TOTAL*100)+"%";
+ for(const k in sc)$("p"+k).textContent=sc[k].d?sc[k].s+" / "+N[k]:"";
+ if(done===TOTAL){const pc=Math.round(score/TOTAL*100);$("pct").textContent=pc+"%";
+  $("fTitle").textContent=pc>=90?"Herzlichen Glückwunsch!":pc>=75?"Gut gemacht!":pc>=55?"Gut, aber übe noch!":"Noch einmal üben!";
+  $("fText").textContent="Правильно: "+score+" з "+TOTAL+"."+(pc<75?" Повтори словничок і спробуй ще раз.":"")}}
+function choose(item,opts,right,key,after,cls){const o=el("div","opts");
+ opts.forEach(t=>{const b=el("button","opt"+(cls?" "+cls:""),t);b.type="button";b.dataset.v=t;b.onclick=()=>{
+  o.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.dataset.v===right)x.classList.add("right")});
+  const ok=t===right;if(!ok)b.classList.add("wrong");item.classList.add(ok?"ok":"bad");after(ok);add(key,ok)};o.appendChild(b)});return o}
+function gapLine(s){const line=el("div","sent");const [a,b]=s.split("___");const g=el("span","gap","?");if(a)line.append(a);line.appendChild(g);if(b)line.append(b);return [line,g]}
+function artSpan(a,w){const b=el("b");if(a)b.append(el("span","art-"+a,a)," ");b.append(w);return b}
+
+function build(){score=0;done=0;for(const k in N)sc[k]={s:0,d:0};
+ const g=$("gloss");g.innerHTML="";GLOSS.forEach(([h,list])=>{g.appendChild(el("h3",null,h));list.forEach(([a,w,u])=>{const d=el("div");d.append(artSpan(a,w),el("span",null,u));g.appendChild(d)})});
+ const a1=$("A1");a1.innerHTML="";
+ shuffle(A1).forEach(([d,r])=>{const it=el("div","item");it.appendChild(el("div","sent",d));
+  const opts=shuffle([r,...shuffle(FESTE.filter(f=>f!==r)).slice(0,3)]);const fb=el("div","fb");
+  it.appendChild(choose(it,opts,r,"A1",ok=>fb.textContent=ok?"Richtig!":"Правильно: "+r,"w"));it.appendChild(fb);a1.appendChild(it)});
+ const a2=$("A2");a2.innerHTML="";
+ shuffle(A2).forEach(([u,r])=>{const it=el("div","item");const s=el("div","sent");s.appendChild(el("span","ua",u));it.appendChild(s);
+  const opts=shuffle([r,...shuffle(A2POOL.filter(f=>f!==r)).slice(0,3)]);const fb=el("div","fb");
+  it.appendChild(choose(it,opts,r,"A2",ok=>fb.textContent=ok?"Richtig!":"Правильно: "+r,"w"));it.appendChild(fb);a2.appendChild(it)});
+ const a3=$("A3");a3.innerHTML="";
+ A3.forEach(([txt,qs])=>{a3.appendChild(el("div","card",txt));
+  qs.forEach(([q,r])=>{const it=el("div","item");it.appendChild(el("div","sent",q));const fb=el("div","fb");
+   it.appendChild(choose(it,["richtig","falsch"],r?"richtig":"falsch","A3",ok=>fb.textContent=ok?"Richtig!":"Неправильно. Перечитай текст.","w"));it.appendChild(fb);a3.appendChild(it)})});
+ const b1=$("B1");b1.innerHTML="";
+ shuffle(B1).forEach(([s,opts])=>{const it=el("div","item");it.appendChild(el("div","sent",s));const fb=el("div","fb");
+  it.appendChild(choose(it,shuffle(opts),opts[0],"B1",ok=>fb.textContent=ok?"Richtig!":"Правильно: "+opts[0],null));it.appendChild(fb);b1.appendChild(it)});
+ const b2=$("B2");b2.innerHTML="";
+ shuffle(B2).forEach(([w,r,why])=>{const it=el("div","item");const [line,gp]=gapLine("Herzlichen Glückwunsch ___ "+w+"!");it.appendChild(line);const fb=el("div","fb");
+  it.appendChild(choose(it,["zum","zur"],r,"B2",ok=>{gp.textContent=r;fb.textContent=(ok?"Richtig! ":"Falsch. ")+why+" → "+r},"w"));it.appendChild(fb);b2.appendChild(it)});
+ const c1=$("C1");c1.innerHTML="";
+ shuffle(C1).forEach(([s,r])=>{const it=el("div","item");const [line,gp]=gapLine(s);it.appendChild(line);const fb=el("div","fb");
+  const cap=s.startsWith("___");const opts=C1OPTS.map(o=>cap?o[0].toUpperCase()+o.slice(1):o);
+  it.appendChild(choose(it,opts,r,"C1",ok=>{gp.textContent=r;fb.textContent=ok?"Richtig!":"Правильно: "+r},"w"));it.appendChild(fb);c1.appendChild(it)});
+ const c2=$("C2");c2.innerHTML="";
+ C2.forEach(([s,opts])=>{const it=el("div","item");it.appendChild(el("div","sent","„"+s+"“"));const fb=el("div","fb");
+  it.appendChild(choose(it,shuffle(opts),opts[0],"C2",ok=>fb.textContent=ok?"Richtig!":"Правильно: "+opts[0],null));it.appendChild(fb);c2.appendChild(it)});
+ const c3=$("C3");c3.innerHTML="";
+ C3.forEach(([s,ua,end,alts])=>{const it=el("div","item");it.appendChild(el("div","ctx",ua));const words=s.split(" ");
+  const built=el("div","built"),toks=el("div","toks");let locked=false;const btn=el("button","btn","Перевірити");btn.type="button";btn.disabled=true;
+  let mix=shuffle(words);while(mix.join(" ")===s)mix=shuffle(words);
+  mix.forEach((w,i)=>{const t=el("button","tok",w);t.type="button";t.id="c3"+s.length+"_"+i;t.onclick=()=>{if(locked)return;(t.parentNode===toks?built:toks).appendChild(t);btn.disabled=built.children.length!==words.length};toks.appendChild(t)});
+  const fb=el("div","fb");
+  btn.onclick=()=>{locked=true;const got=[...built.children].map(t=>t.textContent).join(" ");const ok=got===s||(alts||[]).includes(got);built.querySelectorAll("button").forEach(b=>b.disabled=true);
+   btn.hidden=true;it.classList.add(ok?"ok":"bad");fb.textContent=ok?"Richtig!":"Правильно: "+s+(end||".");add("C3",ok)};
+  const r=el("div","opts");r.appendChild(btn);it.append(built,toks,r,fb);c3.appendChild(it)});
+ $("pct").textContent="—";$("fTitle").textContent="Результат";$("fText").textContent="Виконай усі завдання, і тут з'явиться оцінка.";upd()}
+$("reset").onclick=()=>{build();window.scrollTo({top:0,behavior:"smooth"})};
+build();
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Komparativ & Superlativ</title>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}.wrap{padding-bottom:80px!important}</style>
+</head>
+<body>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: single column of task sheets; gender dots use the textbook's colour code (m blue, n green, f red, Pl yellow) */
+:root{
+  --bg:#f1f0f7; --sheet:#ffffff; --ink:#1e1d33; --muted:#5f5d7a; --line:#dddbec;
+  --accent:#5b4bd6; --accent-ink:#ffffff; --chip:#ebe9f8; --hl:#fff1a8;
+  --m:#2f73d9; --n:#2f9e5a; --f:#d9483b; --pl:#e0a800;
+  --ok:#1f9d55; --ok-bg:#dcf4e5; --bad:#cf4040; --bad-bg:#fbe2e2;
+  --display:"Rubik",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif; --shadow:0 2px 0 #d6d3ea;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13121f; --sheet:#1c1b2d; --ink:#ecebf7; --muted:#a6a3c4; --line:#2e2c47;
+  --accent:#9d91ff; --accent-ink:#15122e; --chip:#2a2842; --hl:#5a4d12;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73; --pl:#ffd04d;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #0a0a14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13121f; --sheet:#1c1b2d; --ink:#ecebf7; --muted:#a6a3c4; --line:#2e2c47;
+  --accent:#9d91ff; --accent-ink:#15122e; --chip:#2a2842; --hl:#5a4d12;
+  --m:#6aa3ff; --n:#5fd18e; --f:#ff7f73; --pl:#ffd04d;
+  --ok:#4fd18a; --ok-bg:#163a28; --bad:#ff7b7b; --bad-bg:#45202a; --shadow:0 2px 0 #0a0a14; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:780px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,6.5vw,42px);font-weight:800;line-height:1.1}
+h1 .pp{color:var(--accent)}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.sheet{background:var(--sheet);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;gap:12px;min-width:0}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.num{font:800 18px var(--display);background:var(--accent);color:var(--accent-ink);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none}
+h2{font-size:21px;font-weight:700;flex:1;min-width:180px}
+.part{font:700 15px var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:15px;margin:0}
+p{margin:0}
+/* rules */
+details summary{cursor:pointer;font:700 18px var(--display);color:var(--accent)}
+.rules{display:grid;gap:14px;margin-top:12px}
+.rules h3{font-size:17px}
+.formula{display:flex;flex-wrap:wrap;gap:8px}
+.formula span{background:var(--chip);border-radius:10px;padding:6px 12px;font-weight:700}
+.formula em{font-style:normal;color:var(--accent)}
+.irr{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.irr td,.irr th{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left}
+.irr th{font:700 14px var(--display);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 2px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* items */
+.q{display:grid;gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.q:first-child{border-top:0}
+.sent{font-size:18px;font-weight:600;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:700 17px var(--display);border:2px solid var(--accent);background:transparent;color:var(--accent);border-radius:12px;padding:6px 14px;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){background:var(--chip)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.gap{display:inline-block;min-width:90px;border-bottom:3px solid var(--accent);text-align:center;font:700 18px var(--display);color:var(--accent);padding:0 6px}
+.q.ok .gap{color:var(--ok);border-color:var(--ok)} .q.bad .gap{color:var(--bad);border-color:var(--bad)}
+.fb{font-size:15px;font-weight:700;min-height:1.2em}
+.q.ok .fb,.fb.ok{color:var(--ok)} .q.bad .fb,.fb.bad{color:var(--bad)}
+.inp{font:700 18px var(--display);width:150px;max-width:100%;border:2px solid var(--accent);border-radius:10px;padding:4px 10px;background:var(--sheet);color:var(--ink);text-align:center}
+.inp.ok{border-color:var(--ok);background:var(--ok-bg)} .inp.bad{border-color:var(--bad);background:var(--bad-bg)}
+.inp.end{width:52px;padding:2px 4px;font-size:16px}
+.opt:focus-visible,.inp:focus-visible,.btn:focus-visible,.key:focus-visible{outline:3px solid var(--pl);outline-offset:2px}
+.btn{font:700 16px var(--display);background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:10px 18px;cursor:pointer;min-height:44px}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.gram{font-size:15px;color:var(--muted)}
+/* steigerung rows */
+.st{display:grid;grid-template-columns:110px 1fr 1fr;gap:8px 12px;align-items:center}
+.st .base{font:700 19px var(--display)}
+.st label{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-weight:700;color:var(--muted)}
+@media (max-width:520px){.st{grid-template-columns:1fr}}
+/* table */
+table.dek{border-collapse:collapse;min-width:620px;width:100%}
+.dek th,.dek td{border:1px solid var(--line);padding:8px;vertical-align:top}
+.dek th{font:700 15px var(--display);text-align:left;background:var(--chip)}
+.dek td div{white-space:nowrap;padding:2px 0;display:flex;align-items:center;gap:2px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.dot.m{background:var(--m)}.dot.n{background:var(--n)}.dot.f{background:var(--f)}.dot.pl{background:var(--pl)}
+/* keys */
+.keys{position:sticky;bottom:env(safe-area-inset-bottom,0px);z-index:5;justify-self:center;display:flex;gap:6px;background:var(--sheet);box-shadow:0 2px 12px rgba(0,0,0,.15);border-radius:14px;padding:6px 8px;align-items:center}
+.keys span{font-size:13px;color:var(--muted);padding:0 4px}
+.key{font:700 18px var(--display);min-width:44px;min-height:40px;border:0;border-radius:10px;background:var(--chip);color:var(--ink);cursor:pointer}
+/* score */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--sheet);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+.track{flex:1;height:12px;background:var(--chip);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.score{font:800 17px var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.final{text-align:center;justify-items:center}
+.big{font:800 44px var(--display);color:var(--accent);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Komparativ <span class="pp">++</span> und Superlativ <span class="pp">+++</span></h1>
+    <p class="lead">Menschen B1.1, Lektion 9. Чотири завдання на ступені порівняння прикметників та їхнє відмінювання перед іменником. Речення взято з теми лекції: здоров'я, робота, спорт.</p>
+  </header>
+
+  <div class="bar" role="status" aria-live="polite">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">0 / 0</div>
+  </div>
+
+  <section class="sheet">
+    <details>
+      <summary>Правило (відкрий, щоб повторити)</summary>
+      <div class="rules">
+        <div>
+          <h3>1. Як утворити форму</h3>
+          <div class="formula" style="margin-top:8px">
+            <span>klein</span><span>klein<em>er</em> ++</span><span>am klein<em>sten</em> / der klein<em>st</em>e +++</span>
+          </div>
+          <p class="hint" style="margin-top:8px">Після -t, -d, -s, -ß, -z, -sch додається <b>-e-</b>: am ält<em>e</em>sten, am frisch<em>e</em>sten, am kürz<em>e</em>sten. Короткі прикметники часто отримують умлаут: lang → länger, gesund → gesünder.</p>
+        </div>
+        <div>
+          <h3>2. Особливі форми</h3>
+          <div class="scroll"><table class="irr">
+            <tr><th>+</th><th>++</th><th>+++</th></tr>
+            <tr><td>gut</td><td>besser</td><td>am besten / der beste</td></tr>
+            <tr><td>viel</td><td>mehr</td><td>am meisten / der meiste</td></tr>
+            <tr><td>hoch</td><td>höher</td><td>am höchsten / der höchste</td></tr>
+            <tr><td>nah</td><td>näher</td><td>am nächsten / der nächste</td></tr>
+            <tr><td>groß</td><td>größer</td><td>am größten / der größte</td></tr>
+            <tr><td>gern</td><td>lieber</td><td>am liebsten</td></tr>
+          </table></div>
+          <p class="hint" style="margin-top:8px"><b>mehr</b> ніколи не отримує закінчення: mehr Energie, mehr Pausen.</p>
+        </div>
+        <div>
+          <h3>3. Закінчення перед іменником</h3>
+          <p>Спочатку суфікс ступеня, потім звичайне закінчення прикметника: klein + <em style="font-style:normal;color:var(--accent)">er</em> + <mark>en</mark> = einen kleiner<mark>en</mark> Stuhl. Закінчення такі самі, як у звичайного прикметника (der gut<mark>e</mark>, ein gut<mark>er</mark>, dem gut<mark>en</mark>).</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">1</div><h2>Steigern Sie!</h2><span class="part" id="p1"></span></div>
+    <p class="hint">Впиши форму ++ і +++. Для +++ слово «am» уже написано.</p>
+    <div id="t1"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">2</div><h2>Ergänzen Sie die Tabelle</h2><span class="part" id="p2"></span></div>
+    <p class="hint">Допиши закінчення прикметника <b>kleiner-</b> (Komparativ). Там, де артикля немає, стоїть «–».</p>
+    <div class="scroll"><table class="dek" id="t2"></table></div>
+    <div class="opts"><button class="btn" id="check2" type="button">Перевірити таблицю</button></div>
+    <div class="fb" id="fb2"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">3</div><h2>Was ist richtig?</h2><span class="part" id="p3"></span></div>
+    <p class="hint">Обери правильну форму. Зверни увагу на артикль і відмінок.</p>
+    <div id="t3"></div>
+  </section>
+
+  <section class="sheet">
+    <div class="head"><div class="num">4</div><h2>Gesundheitstipps: Ergänzen Sie</h2><span class="part" id="p4"></span></div>
+    <p class="hint">Впиши прикметник у правильній формі: ++ означає Komparativ, +++ означає Superlativ.</p>
+    <div id="t4"></div>
+  </section>
+
+  <section class="sheet final">
+    <h2 id="fTitle" style="flex:none">Результат</h2>
+    <div class="big" id="pct">—</div>
+    <p class="hint" id="fText">Виконай усі завдання, і тут з'явиться оцінка.</p>
+    <button class="btn ghost" id="reset" type="button">Почати знову</button>
+  </section>
+
+  <div class="keys" aria-label="Німецькі літери"><span>Вставити:</span>
+    <button class="key" type="button">ä</button><button class="key" type="button">ö</button><button class="key" type="button">ü</button><button class="key" type="button">ß</button>
+  </div>
+</div>
+
+<script>
+const T1=[["gut","besser","besten"],["gesund","gesünder","gesündesten"],["groß","größer","größten"],["lang","länger","längsten"],["hoch","höher","höchsten"],["viel","mehr","meisten"],["alt","älter","ältesten"],["nah","näher","nächsten"],["frisch","frischer","frischesten"],["kurz","kürzer","kürzesten"]];
+// table: case -> [m def, m indef, n def, n indef, f def, f indef, pl def, pl none]
+const ART={Nominativ:["der","ein","das","ein","die","eine","die","–"],Akkusativ:["den","einen","das","ein","die","eine","die","–"],Dativ:["dem","einem","dem","einem","der","einer","den","–"]};
+const END={Nominativ:["e","er","e","es","e","e","en","e"],Akkusativ:["en","en","e","es","e","e","en","e"],Dativ:["en","en","en","en","en","en","en","en"]};
+const NOUN={Nominativ:["Stuhl","Haus","Hand","Stühle"],Akkusativ:["Stuhl","Haus","Hand","Stühle"],Dativ:["Stuhl","Haus","Hand","Stühlen"]};
+const T3=[
+ ["Das ist der ___ Fitness-Trend.",["neueste","neuesten"],"neueste","Nominativ, maskulin, der"],
+ ["Mit einem ___ Stuhl sitzt man besser.",["bequemeren","bequemerem"],"bequemeren","Dativ, maskulin, ein"],
+ ["Ich suche einen ___ Arbeitsplatz.",["ruhigeren","ruhigerer"],"ruhigeren","Akkusativ, maskulin, ein"],
+ ["Sie hat immer die ___ Ideen.",["besten","beste"],"besten","Akkusativ, Plural, die"],
+ ["Ein ___ Leben ist möglich!",["gesünderes","gesünderen"],"gesünderes","Nominativ, neutral, ein"],
+ ["Wir brauchen ___ Pausen.",["längere","längeren"],"längere","Akkusativ, Plural, без артикля"],
+ ["In der ___ Kantine der Stadt essen wir gern.",["schönsten","schönste"],"schönsten","Dativ, feminin, der"],
+ ["Das ist eine ___ Lösung.",["bessere","besseren"],"bessere","Nominativ, feminin, eine"],
+ ["Er arbeitet im ___ Büro der Firma.",["hellsten","hellste"],"hellsten","Dativ, neutral, im = in dem"],
+ ["Mit ___ Mitarbeitern funktioniert der Betrieb gut.",["zufriedeneren","zufriedenere"],"zufriedeneren","Dativ, Plural, без артикля"]
+];
+const T4=[
+ ["Das ist der","Tipp gegen Stress.","gut","+++",["beste"]],
+ ["Wir wünschen uns","Pausen.","lang","++",["längere"]],
+ ["Trinken Sie viel Wasser für einen","Körper!","gesund","++",["gesünderen"]],
+ ["Die","Luft im Park tut gut.","frisch","++",["frischere"]],
+ ["Das","Problem im Büro ist der Stress.","groß","+++",["größte"]],
+ ["Er sitzt auf dem","Stuhl im Büro.","bequem","+++",["bequemsten"]],
+ ["Ich wünsche mir eine","Arbeitszeit.","kurz","++",["kürzere"]],
+ ["Wir arbeiten in einem","Gebäude.","modern","++",["moderneren"]],
+ ["Bei Stress steigen die Kosten auf das","Niveau.","hoch","+++",["höchste"]],
+ ["Mit Sport hat man","Energie.","viel","++",["mehr"]]
+];
+const TOTAL=T1.length*2+24+T3.length+T4.length;
+let score=0,done=0,lastInp=null;const sc={};
+const $=id=>document.getElementById(id);
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>s.trim().toLowerCase().replace(/ss/g,"ß").replace(/^am\s+/,"").replace(/[.!]/g,"");
+function input(cls,id){const i=el("input","inp"+(cls?" "+cls:""));i.id=id;i.autocomplete="off";i.spellcheck=false;i.setAttribute("autocapitalize","off");i.addEventListener("focus",()=>lastInp=i);return i}
+function part(k,n){sc[k]=sc[k]||{s:0,d:0,n};return sc[k]}
+function add(k,ok){const p=sc[k];p.d++;if(ok){p.s++;score++}done++;upd()}
+function upd(){$("score").textContent=score+" / "+TOTAL;$("fill").style.width=(done/TOTAL*100)+"%";
+ ["1","2","3","4"].forEach(k=>{const p=sc[k];if(p)$("p"+k).textContent=p.d?p.s+" / "+p.n:""});
+ if(done===TOTAL){const pc=Math.round(score/TOTAL*100);$("pct").textContent=pc+"%";
+  $("fTitle").textContent=pc>=90?"Ausgezeichnet!":pc>=75?"Sehr gut!":pc>=55?"Gut, aber übe noch!":"Noch einmal üben!";
+  $("fText").textContent="Правильно: "+score+" з "+TOTAL+"."+(pc<75?" Розгорни правило вгорі й спробуй ще раз.":"")}}
+
+function build(){score=0;done=0;for(const k in sc)delete sc[k];
+ // T1
+ part("1",T1.length*2);const t1=$("t1");t1.innerHTML="";
+ T1.forEach(([b,c,s],i)=>{const q=el("div","q");const row=el("div","st");row.appendChild(el("span","base",b));
+  const a=input("","t1c"+i),z=input("","t1s"+i);
+  const l1=el("label");l1.append("++ ",a);const l2=el("label");l2.append("+++ am ",z);row.append(l1,l2);q.appendChild(row);
+  const r=el("div","opts");const btn=el("button","btn","Перевірити");btn.type="button";r.appendChild(btn);q.appendChild(r);
+  const fb=el("div","fb");q.appendChild(fb);
+  const check=()=>{if(!a.value.trim()||!z.value.trim()){(a.value.trim()?z:a).focus();return}
+   const o1=norm(a.value)===c,o2=norm(z.value)===s;a.disabled=z.disabled=true;btn.hidden=true;
+   a.classList.add(o1?"ok":"bad");z.classList.add(o2?"ok":"bad");add("1",o1);add("1",o2);
+   fb.className="fb "+(o1&&o2?"ok":"bad");fb.textContent=o1&&o2?"Richtig!":"Правильно: "+b+" – "+c+" – am "+s};
+  btn.onclick=check;[a,z].forEach(x=>x.addEventListener("keydown",e=>{if(e.key==="Enter")check()}));t1.appendChild(q)});
+ // T2
+ part("2",24);const t2=$("t2");t2.innerHTML="";$("check2").hidden=false;$("fb2").textContent="";$("fb2").className="fb";
+ const hr=el("tr");hr.appendChild(el("th",null,""));
+ [["m","maskulin"],["n","neutral"],["f","feminin"],["pl","Plural"]].forEach(([g,t])=>{const th=el("th");const d=el("span","dot "+g);th.append(d,t);hr.appendChild(th)});t2.appendChild(hr);
+ Object.keys(ART).forEach(cas=>{const tr=el("tr");tr.appendChild(el("th",null,cas));
+  for(let g=0;g<4;g++){const td=el("td");for(let k=0;k<2;k++){const idx=g*2+k;const d=el("div");
+    const inp=input("end","t2_"+cas+idx);inp.dataset.ans=END[cas][idx];inp.setAttribute("aria-label",cas+" "+ART[cas][idx]+" kleiner…");
+    d.append(ART[cas][idx]+" kleiner",inp," "+NOUN[cas][g]);td.appendChild(d)}tr.appendChild(td)}t2.appendChild(tr)});
+ // T3
+ part("3",T3.length);const t3=$("t3");t3.innerHTML="";
+ shuffle(T3).forEach(([s,opts,r,why])=>{const q=el("div","q");const line=el("div","sent");const [a,b]=s.split("___");
+  const g=el("span","gap","?");line.append(a,g,b);q.appendChild(line);const o=el("div","opts");
+  shuffle(opts).forEach(t=>{const bt=el("button","opt",t);bt.type="button";bt.onclick=()=>{
+   o.querySelectorAll("button").forEach(x=>{x.disabled=true;if(x.textContent===r)x.classList.add("right")});
+   const ok=t===r;if(!ok)bt.classList.add("wrong");g.textContent=r;q.classList.add(ok?"ok":"bad");
+   q.querySelector(".fb").textContent=(ok?"Richtig! ":"Falsch. ")+"("+why+")";add("3",ok)};o.appendChild(bt)});
+  q.appendChild(o);q.appendChild(el("div","fb"));t3.appendChild(q)});
+ // T4
+ part("4",T4.length);const t4=$("t4");t4.innerHTML="";
+ T4.forEach(([a,b,adj,deg,ans],i)=>{const q=el("div","q");const line=el("div","sent");const inp=input("","t4_"+i);
+  line.append(a+" ",inp," "+b);q.appendChild(line);q.appendChild(el("div","gram","("+adj+", "+deg+")"));
+  const r=el("div","opts");const btn=el("button","btn","Перевірити");btn.type="button";r.appendChild(btn);q.appendChild(r);
+  const fb=el("div","fb");q.appendChild(fb);
+  const check=()=>{const v=norm(inp.value);if(!v){inp.focus();return}const ok=ans.some(x=>norm(x)===v);
+   inp.disabled=true;btn.hidden=true;inp.classList.add(ok?"ok":"bad");q.classList.add(ok?"ok":"bad");
+   fb.textContent=ok?"Richtig!":"Правильно: "+ans[0]+(adj==="viel"?" (mehr не відмінюється)":"");add("4",ok)};
+  btn.onclick=check;inp.addEventListener("keydown",e=>{if(e.key==="Enter")check()});t4.appendChild(q)});
+ $("pct").textContent="—";$("fTitle").textContent="Результат";$("fText").textContent="Виконай усі завдання, і тут з'явиться оцінка.";upd()}
+
+$("check2").onclick=()=>{const ins=[...$("t2").querySelectorAll("input")];const empty=ins.find(i=>!i.value.trim());
+ if(empty){empty.focus();$("fb2").className="fb bad";$("fb2").textContent="Заповни всі клітинки, потім перевір.";return}
+ let s=0;ins.forEach(i=>{const ok=norm(i.value)===i.dataset.ans;i.disabled=true;i.classList.add(ok?"ok":"bad");
+  if(!ok)i.value=i.dataset.ans;if(ok)s++;add("2",ok)});
+ $("check2").hidden=true;$("fb2").className="fb "+(s===24?"ok":"bad");
+ $("fb2").textContent=s===24?"Усе правильно!":"Правильно "+s+" з 24. Червоні клітинки тепер показують правильне закінчення."};
+document.querySelectorAll(".key").forEach(k=>{k.addEventListener("mousedown",e=>e.preventDefault());k.onclick=()=>{
+ const i=lastInp;if(!i||i.disabled)return;const s=i.selectionStart??i.value.length,e=i.selectionEnd??i.value.length;
+ i.value=i.value.slice(0,s)+k.textContent+i.value.slice(e);i.focus();i.setSelectionRange(s+1,s+1)}});
+$("reset").onclick=()=>{build();window.scrollTo({top:0,behavior:"smooth"})};
+build();
+</script>
+
+<a class="home-link" href="index.html" style="position:fixed;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;font:700 15px Rubik,system-ui,sans-serif;background:#222;color:#fff;text-decoration:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)">← Усі вправи</a>
+</body>
+</html>
